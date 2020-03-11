@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="TitleSplash">سامانه مدیریت جلسات و آئین نامه</string>
+
+    <string name="Please_be_careful_in_entering_your_national_code">
+        لطفا در وارد کردن کد ملی خود دقت کنید
+    </string>
+    <string name="Input_Your_Password">رمز عبور خود را وارد نمایید</string>
+    <string name="Operation_error_occurred">خطای در عملیات رخ داده است</string>
+
+    <string name="Please_Check_Your_Internet">لطفا اینترنت خود را چک نمایید</string>
+    <string name="Your_Internet_Speed_Is_Very_Slow">سرعت اینترنت شما بسیار کند است</string>
+    <string name="An_Error_Has_Occurred_On_The_Server">در سرور خطای رخ داده است</string>
+    <string name="There_Was_an_Error_In_The_Application">خطای در برنامه رخ داده است</string>
+    <string name="please_Checked_Your_Internet_Connection">لطفا اتصال اینترنت خود را چک نمایید</string>
+    <string name="YourInternetIsVrySlow">اینترنت شما بسیار کند است</string>
+    <string name="SelectedYourRole">نقش خود را انتخاب کنید</string>
+    <string name="PleaseSelectOneRole">لطفا یک نقش انتخاب کنید</string>
+
+    <string name="Please_be_Careful_in_Entering_Information">لطفا در وارد کردن اطلاعات دقت کنید</string>
+    <string name="YourLoginWas_Successful_But_There_Was_a_problemRegistering_Your_Role">
+        ورود شما با موفقیت انجام شد اما مشکلی در ثبت نقش شما پیش آمده است
+    </string>
+
+</resources>

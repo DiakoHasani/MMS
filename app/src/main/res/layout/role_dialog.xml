@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:background="@color/colorWhite"
+    android:textDirection="rtl"
+    android:layoutDirection="rtl">
+
+    <RelativeLayout
+        android:id="@+id/head"
+        android:layout_width="match_parent"
+        android:layout_height="64dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textSize="20dp"
+            android:fontFamily="@font/vazir"
+            android:textColor="@color/colorTitle"
+            android:text="@string/SelectedYourRole"
+            android:layout_marginRight="24dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/colorGray"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_below="@id/head">
+
+        <ProgressBar
+            android:id="@+id/Loading"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:theme="@style/ProgressBarTheme"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/Reload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_refresh"
+            android:clickable="true"
+            android:visibility="gone"/>
+
+        <ScrollView
+            android:id="@+id/Items"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingRight="24dp">
+
+                <RadioButton
+                    android:id="@+id/rdo_0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:fontFamily="@font/vazir"
+                    android:paddingRight="32dp"
+                    android:textSize="16dp"
+                    android:textColor="@color/colorTitle"
+                    android:theme="@style/RadioButton"
+                    android:visibility="gone"/>
+
+                <RadioButton
+                    android:id="@+id/rdo_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:fontFamily="@font/vazir"
+                    android:paddingRight="32dp"
+                    android:textSize="16dp"
+                    android:textColor="@color/colorTitle"
+                    android:theme="@style/RadioButton"
+                    android:visibility="gone"/>
+
+                <RadioButton
+                    android:id="@+id/rdo_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:fontFamily="@font/vazir"
+                    android:paddingRight="32dp"
+                    android:textSize="16dp"
+                    android:textColor="@color/colorTitle"
+                    android:theme="@style/RadioButton"
+                    android:visibility="gone"/>
+
+                <RadioButton
+                    android:id="@+id/rdo_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:fontFamily="@font/vazir"
+                    android:paddingRight="32dp"
+                    android:textSize="16dp"
+                    android:textColor="@color/colorTitle"
+                    android:theme="@style/RadioButton"
+                    android:visibility="gone"/>
+
+                <RadioButton
+                    android:id="@+id/rdo_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:fontFamily="@font/vazir"
+                    android:paddingRight="32dp"
+                    android:textSize="16dp"
+                    android:textColor="@color/colorTitle"
+                    android:theme="@style/RadioButton"
+                    android:visibility="gone"/>
+
+                <RadioButton
+                    android:id="@+id/rdo_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:fontFamily="@font/vazir"
+                    android:paddingRight="32dp"
+                    android:textSize="16dp"
+                    android:textColor="@color/colorTitle"
+                    android:theme="@style/RadioButton"
+                    android:visibility="gone"/>
+
+                <RadioButton
+                    android:id="@+id/rdo_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:fontFamily="@font/vazir"
+                    android:paddingRight="32dp"
+                    android:textSize="16dp"
+                    android:textColor="@color/colorTitle"
+                    android:theme="@style/RadioButton"
+                    android:visibility="gone"/>
+
+                <RadioButton
+                    android:id="@+id/rdo_7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:fontFamily="@font/vazir"
+                    android:paddingRight="32dp"
+                    android:textSize="16dp"
+                    android:textColor="@color/colorTitle"
+                    android:theme="@style/RadioButton"
+                    android:visibility="gone"/>
+
+            </RadioGroup>
+
+        </ScrollView>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_below="@id/main">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/colorGray"
+            android:layout_alignParentTop="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="left">
+
+            <Button
+                android:id="@+id/btn_Cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:text="@string/Cancel"
+                android:textSize="14dp"
+                android:fontFamily="@font/vazir"
+                android:textColor="@color/colorPrimary"/>
+
+            <Button
+                android:id="@+id/btn_Select"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:text="@string/Select"
+                android:textSize="14dp"
+                android:fontFamily="@font/vazir"
+                android:textColor="@color/colorPrimary"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

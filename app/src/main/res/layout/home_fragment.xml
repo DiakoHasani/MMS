@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:clickable="true"
+    android:layoutDirection="rtl"
+    android:textDirection="rtl">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolBar">
+
+        <LinearLayout
+            android:id="@+id/main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+
+            <RelativeLayout
+                android:id="@+id/btn_GetAll_Meeting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                android:paddingRight="16dp"
+                android:paddingLeft="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/vazir"
+                    android:text="@string/SeeMeetings"
+                    android:gravity="right"
+                    android:textSize="16dp"
+                    android:textColor="@color/colorBlue"
+                    android:layout_alignParentRight="true"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_chevron_left"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"/>
+
+            </RelativeLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/Recycler_Meeting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"/>
+
+            <RelativeLayout
+                android:id="@+id/btn_GetAll_Request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                android:paddingRight="16dp"
+                android:paddingLeft="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/vazir"
+                    android:text="@string/SeeRequest"
+                    android:gravity="right"
+                    android:textSize="16dp"
+                    android:textColor="@color/colorBlue"
+                    android:layout_alignParentRight="true"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_chevron_left"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"/>
+
+            </RelativeLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/Recycler_Request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"/>
+
+            <RelativeLayout
+                android:id="@+id/btn_GetAll_Approval"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                android:paddingRight="16dp"
+                android:paddingLeft="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/vazir"
+                    android:text="@string/SeeMeeting_of_the_board"
+                    android:gravity="right"
+                    android:textSize="16dp"
+                    android:textColor="@color/colorBlue"
+                    android:layout_alignParentRight="true"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_chevron_left"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"/>
+
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/Recycler_Approval"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/Loading"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/loading_home"
+        android:visibility="invisible"/>
+
+    <!--مربوط به نمایش خطای اینترنت-->
+    <include layout="@layout/error_internet_layout"/>
+
+    <!--مربوط به نمایش خطای ارور برنامه-->
+    <include layout="@layout/error_application_layout"/>
+
+    <!--مربوط به کندی اینترنت-->
+    <include layout="@layout/error_slow_internet"/>
+
+</RelativeLayout>

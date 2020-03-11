@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/toolBar_ChangeRoll"
+        android:icon="@drawable/ic_change_roll"
+        app:showAsAction="always"
+        android:title="@string/ChangeRoll"/>
+
+</menu>

@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">MMS</string>
+    <string name="UserName">نام کاربری</string>
+    <string name="Password">رمز عبور</string>
+    <string name="Login">ورود</string>
+    <string name="Meetings">جلسات</string>
+    <string name="SeeMeetings">نمایش جلسات</string>
+    <string name="Home">صفحه اصلی</string>
+    <string name="Request">درخواست</string>
+    <string name="SeeRequest">نمایش درخواست ها</string>
+    <string name="Meeting_of_the_board">مصوبات</string>
+    <string name="SeeMeeting_of_the_board">نمایش صورت جلسات</string>
+    <string name="Profile">پروفایل</string>
+    <string name="SeeAll">نمایش همه</string>
+    <string name="Again">تلاش مجدد</string>
+    <string name="Select">انتخاب</string>
+    <string name="Open">باز</string>
+    <string name="Close">بستن</string>
+    <string name="Cancel">صرف نظر</string>
+    <string name="ChangeRoll">تغییر نقش</string>
+
+</resources>

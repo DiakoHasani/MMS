@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/BottomBar_Home"
+        android:title="@string/Home"
+        android:icon="@drawable/home" />
+
+    <item
+        android:id="@+id/BottomBar_Request"
+        android:title="@string/Request"
+        android:icon="@drawable/request" />
+
+    <item
+        android:id="@+id/BottomBar_Approvals"
+        android:title="@string/Meeting_of_the_board"
+        android:icon="@drawable/meeting_of_the_board" />
+
+    <item
+        android:id="@+id/BottomBar_Meetings"
+        android:title="@string/Meetings"
+        android:icon="@drawable/meetings" />
+
+<!--    <item-->
+<!--        android:title="@string/Profile"-->
+<!--        android:icon="@drawable/person" />-->
+
+
+</menu>
