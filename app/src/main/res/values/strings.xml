@@ -18,5 +18,6 @@
     <string name="Close">بستن</string>
     <string name="Cancel">صرف نظر</string>
     <string name="ChangeRoll">تغییر نقش</string>
+    <string name="ManegeRequests">مدیریت درخواست ها</string>
 
 </resources>

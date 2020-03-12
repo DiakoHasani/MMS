@@ -8,4 +8,10 @@
         app:showAsAction="always"
         android:title="@string/ChangeRoll"/>
 
+    <item
+        android:id="@+id/toolBar_Request_ManegeRequest"
+        android:icon="@drawable/ic_manegment_requests"
+        app:showAsAction="always"
+        android:title="@string/ManegeRequests"/>
+
 </menu>
