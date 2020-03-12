@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -91,8 +92,23 @@ public class MeetingsFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.central_menu,menu);
+        inflater.inflate(R.menu.meeting_menu,menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if (toggle.onOptionsItemSelected(item))
+            return true;
+
+        switch (item.getItemId()){
+            case R.id.toolBar_Meeting_ChangeRoll:
+                ((CentralActivity)getActivity()).ShowRoleDialog();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

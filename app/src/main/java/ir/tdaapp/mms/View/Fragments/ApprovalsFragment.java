@@ -95,8 +95,23 @@ public class ApprovalsFragment extends BaseFragment implements S_Approval, View.
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.central_menu,menu);
+        inflater.inflate(R.menu.approval_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if (toggle.onOptionsItemSelected(item))
+            return true;
+
+        switch (item.getItemId()) {
+            case R.id.toolBar_Approval_ChangeRoll:
+                ((CentralActivity) getActivity()).ShowRoleDialog();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     //در اینجا عملیات اولیه مثل شروع به گرفتن داده ها شود و در اینجا آداپتر ها و بخش های دیگر دوباره ساخته می شوند

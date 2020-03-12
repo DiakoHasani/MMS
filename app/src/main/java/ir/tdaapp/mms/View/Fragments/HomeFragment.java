@@ -126,7 +126,7 @@ public class HomeFragment extends BaseFragment implements S_Home, View.OnClickLi
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.central_menu,menu);
+        inflater.inflate(R.menu.home_menu,menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -137,7 +137,7 @@ public class HomeFragment extends BaseFragment implements S_Home, View.OnClickLi
             return true;
 
         switch (item.getItemId()){
-            case R.id.toolBar_ChangeRoll:
+            case R.id.toolBar_Home_ChangeRoll:
                 ((CentralActivity)getActivity()).ShowRoleDialog();
                 break;
         }

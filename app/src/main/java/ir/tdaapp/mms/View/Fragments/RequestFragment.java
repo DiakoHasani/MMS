@@ -95,8 +95,23 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.central_menu,menu);
+        inflater.inflate(R.menu.request_menu,menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if (toggle.onOptionsItemSelected(item))
+            return true;
+
+        switch (item.getItemId()){
+            case R.id.toolBar_Request_ChangeRoll:
+                ((CentralActivity)getActivity()).ShowRoleDialog();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     //در اینجا عملیات اولیه انجام می شود مثل نیو کردن آداپترها و عملیات دیگر
