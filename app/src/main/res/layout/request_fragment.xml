@@ -35,11 +35,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <Spinner
+                    android:id="@+id/cmb_Meetings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_marginLeft="16dp"
+                    android:spinnerMode="dialog"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
+                    android:textDirection="ltr"
+                    android:layoutDirection="ltr"/>
+
+                <Spinner
+                    android:id="@+id/cmb_Council"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_below="@id/cmb_Meetings"
+                    android:layout_marginLeft="16dp"
+                    android:spinnerMode="dialog"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
+                    android:textDirection="ltr"
+                    android:layoutDirection="ltr"/>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/Recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:visibility="gone"
+                    android:layout_below="@id/cmb_Council"
+                    android:overScrollMode="never"/>
 
                 <!--مربوط به نمایش خطای اینترنت-->
                 <include layout="@layout/error_internet_layout"/>

@@ -2,8 +2,8 @@ package ir.tdaapp.mms.Model.ViewModels;
 
 import androidx.annotation.NonNull;
 
-//برای جلسات
-public class VM_Meetings {
+//مربوط به شوراها
+public class VM_Councils {
     private int Id;
     private String Title;
 

@@ -7,7 +7,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -23,6 +25,9 @@ import ir.tdaapp.li_volley.Enum.ResaultCode;
 import ir.tdaapp.mms.Model.Adapters.RequestAdapter;
 import ir.tdaapp.mms.Model.Services.S_Request;
 import ir.tdaapp.mms.Model.Utilitys.BaseFragment;
+import ir.tdaapp.mms.Model.ViewModels.VM_Councils;
+import ir.tdaapp.mms.Model.ViewModels.VM_FilterRequest;
+import ir.tdaapp.mms.Model.ViewModels.VM_Meetings;
 import ir.tdaapp.mms.Model.ViewModels.VM_Requests;
 import ir.tdaapp.mms.Presenter.P_Request;
 import ir.tdaapp.mms.R;
@@ -40,6 +45,7 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
     LinearLayout No_Internet, error,Slow_Internet;
     ShimmerFrameLayout shimmer_error, shimmer_internet, Loading,shimmer_slow_internet;
     TextView btn_Error_Again, btn_NoInternet_Retry,btn_SlowInternet_Retry;
+    Spinner cmb_Meetings,cmb_Council;
 
     @Nullable
     @Override
@@ -51,7 +57,7 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
         SetToolBar();
 
         //در اینجا گرفتن داده ها شروع می شود
-        p_request.Start();
+        p_request.Start(getFilter());
 
         return view;
     }
@@ -77,6 +83,8 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
         Slow_Internet = view.findViewById(R.id.Slow_Internet);
         shimmer_slow_internet = view.findViewById(R.id.shimmer_slow_internet);
         btn_SlowInternet_Retry = view.findViewById(R.id.btn_SlowInternet_Retry);
+        cmb_Meetings = view.findViewById(R.id.cmb_Meetings);
+        cmb_Council = view.findViewById(R.id.cmb_Council);
     }
 
     //در اینجا عملیات مربوط به تولبار انجام می شود
@@ -90,6 +98,17 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
         toggle.syncState();
 
         setHasOptionsMenu(true);
+    }
+
+    //در اینجا فیلتر های کاربر برای نمایش درخواست ها ارسال می شود
+    VM_FilterRequest getFilter(){
+        VM_FilterRequest filterRequest = new VM_FilterRequest();
+        filterRequest.setCouncilId(0);
+        filterRequest.setMeetingId(0);
+        filterRequest.setRoleId(0);
+        filterRequest.setUserId(0);
+
+        return filterRequest;
     }
 
     @Override
@@ -180,12 +199,42 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
         error.setVisibility(View.GONE);
         Loading.setVisibility(View.GONE);
         Slow_Internet.setVisibility(View.GONE);
+        cmb_Meetings.setVisibility(View.GONE);
+        cmb_Council.setVisibility(View.GONE);
     }
 
     //در اینجا زمانی که داده ها با موفقیت دریافت شوند متد زیر برای نمایش رسایکلر فراخوانی می شود
     @Override
     public void OnSuccess() {
         Recycler.setVisibility(View.VISIBLE);
+        cmb_Meetings.setVisibility(View.VISIBLE);
+    }
+
+    //در اینجا داده های اسپینر جلسات دریافت می شود
+    @Override
+    public void onGetMeetings(ArrayAdapter<VM_Meetings> adapter) {
+        cmb_Meetings.setAdapter(adapter);
+    }
+
+    //در اینجا داده های اسپینر شوراها ست می شود
+    @Override
+    public void onGetCouncil(ArrayAdapter<VM_Councils> adapter) {
+        cmb_Council.setAdapter(adapter);
+    }
+
+    //در اینجا معلوم می شود که اسپینر شوراها نمایش داده شود یا مخفی شود
+    @Override
+    public void onShowSpinnerCouncil(boolean show) {
+        if (show)
+            cmb_Council.setVisibility(View.VISIBLE);
+        else
+            cmb_Council.setVisibility(View.GONE);
+    }
+
+    //در اینجا ست می شود که دکمه بررسی درخواست ها در تولبار نمایش داده شود یا خیر
+    @Override
+    public void onShowManegmentRequests(boolean show) {
+
     }
 
     @Override
@@ -194,7 +243,7 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
             case R.id.btn_Error_Again:
             case R.id.btn_NoInternet_Retry:
             case R.id.btn_SlowInternet_Retry:
-                p_request.Start();
+                p_request.Start(getFilter());
                 break;
         }
     }
