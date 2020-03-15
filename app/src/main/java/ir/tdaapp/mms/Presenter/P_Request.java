@@ -19,6 +19,7 @@ import ir.tdaapp.mms.Model.ViewModels.VM_FilterRequest;
 import ir.tdaapp.mms.Model.ViewModels.VM_Meetings;
 import ir.tdaapp.mms.Model.ViewModels.VM_MyRequests;
 import ir.tdaapp.mms.Model.ViewModels.VM_Requests;
+import ir.tdaapp.mms.Model.ViewModels.VM_RequestsDataSpinners;
 import ir.tdaapp.mms.R;
 import ir.tdaapp.mms.View.Activitys.CentralActivity;
 
@@ -27,7 +28,7 @@ public class P_Request {
     private S_Request s_request;
     private Context context;
     private Api_Request api_request;
-    Disposable dispose_GetVals, dispose_SetItems;
+    Disposable dispose_GetVals, dispose_SetItems, dispose_getInitialValue;
 
     public P_Request(S_Request s_request, Context context) {
         this.s_request = s_request;
@@ -36,37 +37,65 @@ public class P_Request {
     }
 
     //در اینجا عملیات اولیه انجام می شود
-    public void Start(VM_FilterRequest filter) {
+    public void Start(VM_FilterRequest filter,boolean getCouncils) {
 
         if (((CentralActivity) context).getTbl_role().HasRole()) {
 
             s_request.Start();
             s_request.HideAll();
             s_request.Loading(true);
-            GetVals(filter);
+
+            getInitialValue(filter.getCouncilId(),getCouncils);
 
         } else {
             Toast.makeText(context, context.getResources().getString(R.string.PleaseSelectOneRole), Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     //در اینجا درخواست ها را از سرور می گیرد
-    private void GetVals(VM_FilterRequest filter) {
+    public void getRequests(VM_FilterRequest filter) {
 
-        Single<VM_MyRequests> vals = api_request.GetRequests(filter);
-        dispose_GetVals = vals.subscribeWith(new DisposableSingleObserver<VM_MyRequests>() {
+        s_request.Loading(true);
+
+        Single<List<VM_Requests>> vals = api_request.GetRequests(filter);
+        dispose_GetVals = vals.subscribeWith(new DisposableSingleObserver<List<VM_Requests>>() {
             @Override
-            public void onSuccess(VM_MyRequests my_Requests) {
+            public void onSuccess(List<VM_Requests> requests) {
+                s_request.Loading(false);
+                s_request.OnSuccess();
+                SetItems(requests);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                s_request.HideAll();
+                s_request.OnError(Error.GetErrorVolley(e.toString()));
+            }
+        });
+    }
+
+    //در اینجا مقادیر اسپینرها گرفته میشود
+    void getInitialValue(int councilId,boolean getCouncils) {
+
+        int userId = ((CentralActivity) context).getTbl_user().GetUserId();
+        int roleId = ((CentralActivity) context).getTbl_role().GetRoleId();
+
+        Single<VM_RequestsDataSpinners> vals = api_request.getSpinnerData(userId, roleId, councilId);
+
+        dispose_getInitialValue = vals.subscribeWith(new DisposableSingleObserver<VM_RequestsDataSpinners>() {
+            @Override
+            public void onSuccess(VM_RequestsDataSpinners vm_requestsDataSpinners) {
                 s_request.Loading(false);
                 s_request.HideAll();
-                s_request.OnSuccess();
 
-                SetItems(my_Requests.getRequests());
-                SetMeetings(my_Requests.getMeetings());
-                SetCouncil(my_Requests.getCouncils());
-                SetShowElements(my_Requests.isManegment(),my_Requests.getCouncils().size());
+                if (getCouncils){
+                    SetCouncil(vm_requestsDataSpinners.getCouncils());
+                }
+
+                SetMeetings(vm_requestsDataSpinners.getMeetings());
+                SetShowElements(vm_requestsDataSpinners.isManegment(), vm_requestsDataSpinners.getCouncils().size());
+
+                s_request.OnSuccessGetSpinners();
             }
 
             @Override
@@ -100,14 +129,22 @@ public class P_Request {
 
         if (isManegment) {
             s_request.onShowManegmentRequests(true);
-        }else{
+        } else {
             s_request.onShowManegmentRequests(false);
         }
 
-        if (countCouncil > 1) {
-            s_request.onShowSpinnerCouncil(true);
-        }else{
+        //در اینجا اگر تعداد شوراها یکی باشد یعنی فقط یک آیتم که آن هم ثابت است دارد و هیچ شورایی ندارد
+        if (countCouncil <= 1) {
             s_request.onShowSpinnerCouncil(false);
+            s_request.onNotMemberAnyCouncil();
+        }
+        //در اینجا چون کاربر تک شورایی است باید اسپینر شوراها مخفی شود اما بدلیل باگ اسپینر که درحالت مخفی نمی توان یک سطر را انتخاب کرد فعلا اسپینر را نشان می دهیم
+        else if (countCouncil == 2) {
+            s_request.onShowSpinnerCouncil(true);
+        }
+        //اگر تعداد شورا بیشتر از یک باشد اسپینر مربوط به شورا نمایش داده می شود
+        else {
+            s_request.onShowSpinnerCouncil(true);
         }
 
     }
@@ -135,6 +172,10 @@ public class P_Request {
 
         if (dispose_SetItems != null) {
             composite.add(dispose_SetItems);
+        }
+
+        if (dispose_getInitialValue != null) {
+            composite.add(dispose_getInitialValue);
         }
         return composite;
     }

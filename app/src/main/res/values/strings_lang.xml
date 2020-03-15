@@ -17,6 +17,7 @@
     <string name="YourInternetIsVrySlow">اینترنت شما بسیار کند است</string>
     <string name="SelectedYourRole">نقش خود را انتخاب کنید</string>
     <string name="PleaseSelectOneRole">لطفا یک نقش انتخاب کنید</string>
+    <string name="YouAreNot_a_MemberOfAnyCouncil">شما درهیچ شورایی عضو نیستید</string>
 
     <string name="Please_be_Careful_in_Entering_Information">لطفا در وارد کردن اطلاعات دقت کنید</string>
     <string name="YourLoginWas_Successful_But_There_Was_a_problemRegistering_Your_Role">

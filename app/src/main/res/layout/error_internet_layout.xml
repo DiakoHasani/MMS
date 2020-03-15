@@ -2,7 +2,7 @@
 <LinearLayout android:id="@+id/No_Internet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="80dp"
+    android:layout_marginTop="120dp"
     android:orientation="vertical"
     android:gravity="center"
     android:visibility="gone"

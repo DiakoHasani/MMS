@@ -7,10 +7,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 
@@ -42,10 +45,11 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
     P_Request p_request;
     RequestAdapter requestAdapter;
     LinearLayoutManager layoutManager;
-    LinearLayout No_Internet, error,Slow_Internet;
-    ShimmerFrameLayout shimmer_error, shimmer_internet, Loading,shimmer_slow_internet;
-    TextView btn_Error_Again, btn_NoInternet_Retry,btn_SlowInternet_Retry;
-    Spinner cmb_Meetings,cmb_Council;
+    LinearLayout No_Internet, error, Slow_Internet;
+    ShimmerFrameLayout shimmer_error, shimmer_internet, Loading, shimmer_slow_internet, shimmer_NotMemberAnyCouncil;
+    TextView btn_Error_Again, btn_NoInternet_Retry, btn_SlowInternet_Retry;
+    Spinner cmb_Meetings, cmb_Council;
+    LinearLayout spinners, NotMemberAnyCouncil;
 
     @Nullable
     @Override
@@ -57,7 +61,7 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
         SetToolBar();
 
         //در اینجا گرفتن داده ها شروع می شود
-        p_request.Start(getFilter());
+        p_request.Start(getFilter(),true);
 
         return view;
     }
@@ -68,6 +72,37 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
         btn_Error_Again.setOnClickListener(this);
         btn_NoInternet_Retry.setOnClickListener(this);
         btn_SlowInternet_Retry.setOnClickListener(this);
+
+        //برای زمانی که آیتم اسپینر جلسات تغییر کند
+        cmb_Meetings.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Start();
+                p_request.getRequests(getFilter());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        //برای زمانی که آیتم اسپینر شورا تغییر کند
+        cmb_Council.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                int Id = ((VM_Councils) adapterView.getItemAtPosition(i)).getId();
+                if (Id != 0) {
+                    Start();
+                    p_request.Start(getFilter(),false);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     void FindItem(View view) {
@@ -85,6 +120,9 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
         btn_SlowInternet_Retry = view.findViewById(R.id.btn_SlowInternet_Retry);
         cmb_Meetings = view.findViewById(R.id.cmb_Meetings);
         cmb_Council = view.findViewById(R.id.cmb_Council);
+        spinners = view.findViewById(R.id.spinners);
+        NotMemberAnyCouncil = view.findViewById(R.id.NotMemberAnyCouncil);
+        shimmer_NotMemberAnyCouncil = view.findViewById(R.id.shimmer_NotMemberAnyCouncil);
     }
 
     //در اینجا عملیات مربوط به تولبار انجام می شود
@@ -101,12 +139,32 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
     }
 
     //در اینجا فیلتر های کاربر برای نمایش درخواست ها ارسال می شود
-    VM_FilterRequest getFilter(){
+    VM_FilterRequest getFilter() {
         VM_FilterRequest filterRequest = new VM_FilterRequest();
-        filterRequest.setCouncilId(0);
-        filterRequest.setMeetingId(0);
-        filterRequest.setRoleId(0);
-        filterRequest.setUserId(0);
+
+        //اگر صفحه برای اولین بار بازشود و اسپینر شورا هیچ آداپتری نداشته باشد شرط زیر اجرا می شود
+        if (cmb_Council.getAdapter() == null) {
+            filterRequest.setCouncilId(0);
+        } else {
+            if (cmb_Council.getAdapter().getCount() > 0) {
+                filterRequest.setCouncilId(((VM_Councils) cmb_Council.getSelectedItem()).getId());
+            } else {
+                filterRequest.setCouncilId(0);
+            }
+        }
+
+        if (cmb_Meetings.getAdapter() == null) {
+            filterRequest.setMeetingId(0);
+        } else {
+            if (cmb_Meetings.getAdapter().getCount() > 0) {
+                filterRequest.setMeetingId(((VM_Meetings) cmb_Meetings.getSelectedItem()).getId());
+            } else {
+                filterRequest.setMeetingId(0);
+            }
+        }
+
+        filterRequest.setRoleId(((CentralActivity) getActivity()).getTbl_role().GetRoleId());
+        filterRequest.setUserId(((CentralActivity) getActivity()).getTbl_user().GetUserId());
 
         return filterRequest;
     }
@@ -114,7 +172,7 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.request_menu,menu);
+        inflater.inflate(R.menu.request_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -124,9 +182,9 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
         if (toggle.onOptionsItemSelected(item))
             return true;
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.toolBar_Request_ChangeRoll:
-                ((CentralActivity)getActivity()).ShowRoleDialog();
+                ((CentralActivity) getActivity()).ShowRoleDialog();
                 break;
         }
 
@@ -145,6 +203,7 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
         shimmer_error.startShimmerAnimation();
         shimmer_internet.startShimmerAnimation();
         shimmer_slow_internet.startShimmerAnimation();
+        shimmer_NotMemberAnyCouncil.startShimmerAnimation();
     }
 
     //اگر در برگشت داده ها خطای رخ دهد متد زیر فراخوانی می شود
@@ -152,13 +211,16 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
     public void OnError(ResaultCode resault) {
         switch (resault) {
             case NetworkError:
+                No_Internet.setAnimation(((CentralActivity)getActivity()).getAniFadeIn());
                 No_Internet.setVisibility(View.VISIBLE);
                 break;
             case TimeoutError:
+                Slow_Internet.setAnimation(((CentralActivity)getActivity()).getAniFadeIn());
                 Slow_Internet.setVisibility(View.VISIBLE);
             case ServerError:
             case ParseError:
             case Error:
+                error.setAnimation(((CentralActivity)getActivity()).getAniFadeIn());
                 error.setVisibility(View.VISIBLE);
                 break;
         }
@@ -167,11 +229,13 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
     //در اینجا حالت لودینگ ست می شود که یک مقدار می گیرد که آیا برنامه در حالت لودینگ قرار گیرد
     @Override
     public void Loading(boolean isLoading) {
-        if (isLoading){
+        if (isLoading) {
             Loading.startShimmerAnimation();
+            Loading.setAnimation(((CentralActivity)getActivity()).getAniFadeIn());
             Loading.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             Loading.stopShimmerAnimation();
+            Loading.setAnimation(((CentralActivity)getActivity()).getAniFadeOut());
             Loading.setVisibility(View.GONE);
         }
     }
@@ -189,25 +253,74 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
         shimmer_internet.stopShimmerAnimation();
         Loading.stopShimmerAnimation();
         shimmer_slow_internet.stopShimmerAnimation();
+        shimmer_NotMemberAnyCouncil.stopShimmerAnimation();
     }
 
     //در اینجا تمامی آیتم ها مخفی می شوند
     @Override
     public void HideAll() {
+
+        Recycler.setAnimation(((CentralActivity)getActivity()).getAniFadeOut());
         Recycler.setVisibility(View.GONE);
+
+        No_Internet.setAnimation(((CentralActivity)getActivity()).getAniFadeOut());
         No_Internet.setVisibility(View.GONE);
+
+        error.setAnimation(((CentralActivity)getActivity()).getAniFadeOut());
         error.setVisibility(View.GONE);
+
+        Loading.setAnimation(((CentralActivity)getActivity()).getAniFadeOut());
         Loading.setVisibility(View.GONE);
+
+        Slow_Internet.setAnimation(((CentralActivity)getActivity()).getAniFadeOut());
         Slow_Internet.setVisibility(View.GONE);
+
+        cmb_Meetings.setAnimation(((CentralActivity)getActivity()).getAniFadeOut());
         cmb_Meetings.setVisibility(View.GONE);
+
+        cmb_Council.setAnimation(((CentralActivity)getActivity()).getAniFadeOut());
         cmb_Council.setVisibility(View.GONE);
+
+        NotMemberAnyCouncil.setAnimation(((CentralActivity)getActivity()).getAniFadeOut());
+        NotMemberAnyCouncil.setVisibility(View.GONE);
     }
 
     //در اینجا زمانی که داده ها با موفقیت دریافت شوند متد زیر برای نمایش رسایکلر فراخوانی می شود
     @Override
     public void OnSuccess() {
+        Recycler.setAnimation(((CentralActivity)getActivity()).getAniFadeIn());
         Recycler.setVisibility(View.VISIBLE);
-        cmb_Meetings.setVisibility(View.VISIBLE);
+    }
+
+    //زمانی که داده های اسپینر گرفته شوند متد زیر فراخوانی می شود
+    @Override
+    public void OnSuccessGetSpinners() {
+
+        //در اینجا اگر اسپینر جلسات آداپتر داشته باشد شرط زیر اجرا می شود در غیر این صورت اسپینر را مخفی می کند
+        if (cmb_Meetings.getAdapter() != null) {
+
+            //اگر اسپینر جلسات آیتم داشته باشد آن رانمایش می دهد در غیر این صورت آن را مخفی می کند
+            if (cmb_Meetings.getAdapter().getCount() > 0) {
+
+                cmb_Meetings.setAnimation(((CentralActivity)getActivity()).getAniFadeIn());
+                cmb_Meetings.setVisibility(View.VISIBLE);
+            } else {
+
+                cmb_Meetings.setAnimation(((CentralActivity)getActivity()).getAniFadeOut());
+                cmb_Meetings.setVisibility(View.GONE);
+
+                if (cmb_Council.getAdapter() != null) {
+                    //اگر کاربر تک شورایی باشد به صورت پیش فرض یکی از آیتم های آن را انتخاب می کند
+                    if (cmb_Council.getAdapter().getCount() == 2) {
+                        cmb_Council.setSelection(1);
+                    }
+                }
+            }
+
+        } else {
+            cmb_Meetings.setAnimation(((CentralActivity)getActivity()).getAniFadeOut());
+            cmb_Meetings.setVisibility(View.GONE);
+        }
     }
 
     //در اینجا داده های اسپینر جلسات دریافت می شود
@@ -225,10 +338,14 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
     //در اینجا معلوم می شود که اسپینر شوراها نمایش داده شود یا مخفی شود
     @Override
     public void onShowSpinnerCouncil(boolean show) {
-        if (show)
+        if (show){
+            cmb_Council.setAnimation(((CentralActivity)getActivity()).getAniFadeIn());
             cmb_Council.setVisibility(View.VISIBLE);
-        else
+        }
+        else {
+            cmb_Council.setAnimation(((CentralActivity)getActivity()).getAniFadeOut());
             cmb_Council.setVisibility(View.GONE);
+        }
     }
 
     //در اینجا ست می شود که دکمه بررسی درخواست ها در تولبار نمایش داده شود یا خیر
@@ -237,13 +354,20 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
 
     }
 
+    //برای نمایش آیتم شما عضو هیچ شورایی نیستید
+    @Override
+    public void onNotMemberAnyCouncil() {
+        NotMemberAnyCouncil.setAnimation(((CentralActivity)getActivity()).getAniFadeIn());
+        NotMemberAnyCouncil.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_Error_Again:
             case R.id.btn_NoInternet_Retry:
             case R.id.btn_SlowInternet_Retry:
-                p_request.Start(getFilter());
+                p_request.Start(getFilter(),true);
                 break;
         }
     }

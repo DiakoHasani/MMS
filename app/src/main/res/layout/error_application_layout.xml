@@ -6,7 +6,7 @@
     android:gravity="center"
     android:visibility="gone"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_marginTop="80dp">
+    android:layout_marginTop="120dp">
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_error"

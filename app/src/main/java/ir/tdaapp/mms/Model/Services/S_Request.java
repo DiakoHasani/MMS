@@ -22,6 +22,8 @@ public interface S_Request {
 
     void OnSuccess();
 
+    void OnSuccessGetSpinners();
+
     void onGetMeetings(ArrayAdapter<VM_Meetings> adapter);
 
     void onGetCouncil(ArrayAdapter<VM_Councils> adapter);
@@ -29,4 +31,6 @@ public interface S_Request {
     void onShowSpinnerCouncil(boolean show);
 
     void onShowManegmentRequests(boolean show);
+
+    void onNotMemberAnyCouncil();
 }

@@ -314,6 +314,22 @@ public class CentralActivity extends AppCompatActivity implements S_Central, Nav
         return tbl_role;
     }
 
+    public Animation getAniFadeIn() {
+        return aniFadeIn;
+    }
+
+    public void setAniFadeIn(Animation aniFadeIn) {
+        this.aniFadeIn = aniFadeIn;
+    }
+
+    public Animation getAniFadeOut() {
+        return aniFadeOut;
+    }
+
+    public void setAniFadeOut(Animation aniFadeOut) {
+        this.aniFadeOut = aniFadeOut;
+    }
+
     //در اینجا دیالوگ مربوط به انتخاب نقش ها نمایش داده می شود
     public void ShowRoleDialog() {
 
