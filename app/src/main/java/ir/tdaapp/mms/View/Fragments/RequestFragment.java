@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,6 +54,7 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
     LinearLayout spinners, NotMemberAnyCouncil;
     MenuItem menu_manegment_requests;
     ProgressBar Loading;
+    FloatingActionButton btn_AddRequest;
 
     @Nullable
     @Override
@@ -75,6 +77,7 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
         btn_Error_Again.setOnClickListener(this);
         btn_NoInternet_Retry.setOnClickListener(this);
         btn_SlowInternet_Retry.setOnClickListener(this);
+        btn_AddRequest.setOnClickListener(this);
 
         //برای زمانی که آیتم اسپینر جلسات تغییر کند
         cmb_Meetings.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -126,6 +129,7 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
         NotMemberAnyCouncil = view.findViewById(R.id.NotMemberAnyCouncil);
         shimmer_NotMemberAnyCouncil = view.findViewById(R.id.shimmer_NotMemberAnyCouncil);
         Loading = view.findViewById(R.id.Loading);
+        btn_AddRequest = view.findViewById(R.id.btn_AddRequest);
     }
 
     //در اینجا عملیات مربوط به تولبار انجام می شود
@@ -368,18 +372,16 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.btn_AddRequest:
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .add(R.id.FrameRequest,new AddRequestFragment()).commit();
+                break;
             case R.id.btn_Error_Again:
             case R.id.btn_NoInternet_Retry:
             case R.id.btn_SlowInternet_Retry:
-
-                if (cmb_Council.getAdapter()!=null){
-                    cmb_Council.setAdapter(null);
-                }
-
-                if (cmb_Meetings.getAdapter()!=null){
-                    cmb_Meetings.setAdapter(null);
-                }
-
+                //در اینجا ابتدا اسپینرهای فیلتر را پاک کرده بعد عملیات گرفتن داده ها را انجام می دهد
+                cmb_Council.setAdapter(null);
+                cmb_Meetings.setAdapter(null);
                 p_request.Start(getFilter(), true);
                 break;
         }

@@ -19,5 +19,6 @@
     <string name="Cancel">صرف نظر</string>
     <string name="ChangeRoll">تغییر نقش</string>
     <string name="ManegeRequests">مدیریت درخواست ها</string>
+    <string name="AddRequest">افزودن درخواست</string>
 
 </resources>
