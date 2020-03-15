@@ -12,6 +12,7 @@ import io.reactivex.Single;
 import ir.tdaapp.li_volley.Enum.ResaultCode;
 import ir.tdaapp.li_volley.Volleys.GetJsonArrayVolley;
 import ir.tdaapp.li_volley.Volleys.GetJsonObjectVolley;
+import ir.tdaapp.li_volley.Volleys.PostJsonObjectVolley;
 import ir.tdaapp.mms.Model.Enums.Request_Condition;
 import ir.tdaapp.mms.Model.Utilitys.BaseApi;
 import ir.tdaapp.mms.Model.ViewModels.VM_Councils;
@@ -30,29 +31,55 @@ public class Api_Request extends BaseApi {
             Thread thread = new Thread(() -> {
 
                 try {
-                    List<VM_Requests> requests = new ArrayList<>();
 
-                    for (int i = 1; i < 20; i++) {
-                        VM_Requests request = new VM_Requests();
-                        request.setId(i);
-                        request.setTitle("درخواست " + i);
-                        if (i % 2 == 0) {
-                            request.setCondition(Request_Condition.Accepted);
-                        } else if (i == 3 && i == 11 && i == 17 && i == 19) {
-                            request.setCondition(Request_Condition.Reject);
+                    new GetJsonArrayVolley(ApiUrl + "Request?UserId=" + filter.getUserId() + "&CouncilsessionId=" + filter.getMeetingId(), resault -> {
+
+                        if (resault.getResault() == ResaultCode.Success) {
+
+                            try {
+
+                                List<VM_Requests> requests = new ArrayList<>();
+                                JSONArray array = resault.getJsonArray();
+
+                                for (int i = 0; i < array.length(); i++) {
+                                    try {
+
+                                        JSONObject object=array.getJSONObject(i);
+                                        VM_Requests request=new VM_Requests();
+
+                                        request.setId(object.getInt("Id"));
+                                        request.setTitle(object.getString("Title"));
+
+                                        if (object.getInt("Condition") == 0) {
+                                            request.setCondition(Request_Condition.Waiting);
+                                        } else if (object.getInt("Condition") == 1) {
+                                            request.setCondition(Request_Condition.Accepted);
+                                        } else {
+                                            request.setCondition(Request_Condition.Reject);
+                                        }
+
+                                        requests.add(request);
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                emitter.onSuccess(requests);
+
+                            }catch (Exception e){
+                                emitter.onError(e);
+                            }
+
                         } else {
-                            request.setCondition(Request_Condition.Waiting);
+                            emitter.onError(new IOException(resault.getResault().toString()));
                         }
 
-                        requests.add(request);
-                    }
-
-                    emitter.onSuccess(requests);
+                    });
 
                 } catch (Exception e) {
                     emitter.onError(e);
                 }
-
             });
             thread.run();
 
@@ -118,8 +145,8 @@ public class Api_Request extends BaseApi {
 
                                 try {
 
-                                    JSONObject object=CouncilsArray.getJSONObject(i);
-                                    VM_Councils council=new VM_Councils();
+                                    JSONObject object = CouncilsArray.getJSONObject(i);
+                                    VM_Councils council = new VM_Councils();
                                     council.setId(object.getInt("Id"));
                                     council.setTitle(object.getString("Titel"));
 
