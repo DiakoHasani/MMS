@@ -20,5 +20,7 @@
     <string name="ChangeRoll">تغییر نقش</string>
     <string name="ManegeRequests">مدیریت درخواست ها</string>
     <string name="AddRequest">افزودن درخواست</string>
+    <string name="CreateRequest">ایجاد درخواست</string>
+    <string name="RequestText">متن درخواست</string>
 
 </resources>

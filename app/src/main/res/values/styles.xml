@@ -24,6 +24,11 @@
         <item name="android:background">?selectableItemBackground</item>
     </style>
 
+    <style name="AppTheme.MyRipple2">
+        <item name="colorControlHighlight">@color/colorBlue2</item>
+        <item name="android:background">?selectableItemBackground</item>
+    </style>
+
     <style name="ProgressBarTheme" parent="ThemeOverlay.AppCompat.Light">
         <item name="colorAccent">@color/colorPrimary</item>
     </style>

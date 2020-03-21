@@ -14,12 +14,14 @@ import androidx.appcompat.widget.Toolbar;
 import ir.tdaapp.mms.Model.Enums.BottomBarItem;
 import ir.tdaapp.mms.Model.Services.S_AddRequest;
 import ir.tdaapp.mms.Model.Utilitys.BaseFragment;
+import ir.tdaapp.mms.Presenter.P_AddRequest;
 import ir.tdaapp.mms.R;
 import ir.tdaapp.mms.View.Activitys.CentralActivity;
 
 public class AddRequestFragment extends BaseFragment implements S_AddRequest {
 
     Toolbar toolBar;
+    P_AddRequest p_addRequest;
 
     @Nullable
     @Override
@@ -52,7 +54,7 @@ public class AddRequestFragment extends BaseFragment implements S_AddRequest {
     }
 
     void implement(){
-
+        p_addRequest=new P_AddRequest(getContext(),this);
     }
 
     @Override
