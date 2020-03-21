@@ -12,11 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import ir.tdaapp.mms.Model.Enums.BottomBarItem;
+import ir.tdaapp.mms.Model.Services.S_AddRequest;
 import ir.tdaapp.mms.Model.Utilitys.BaseFragment;
 import ir.tdaapp.mms.R;
 import ir.tdaapp.mms.View.Activitys.CentralActivity;
 
-public class AddRequestFragment extends BaseFragment {
+public class AddRequestFragment extends BaseFragment implements S_AddRequest {
 
     Toolbar toolBar;
 
