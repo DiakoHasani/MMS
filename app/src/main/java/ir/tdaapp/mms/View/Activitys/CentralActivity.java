@@ -16,6 +16,7 @@ import ir.tdaapp.mms.Model.Services.S_Central;
 import ir.tdaapp.mms.Presenter.P_Central;
 import ir.tdaapp.mms.R;
 import ir.tdaapp.mms.View.Dialogs.RoleDialog;
+import ir.tdaapp.mms.View.Fragments.AddRequestFragment;
 import ir.tdaapp.mms.View.Fragments.ApprovalsFragment;
 import ir.tdaapp.mms.View.Fragments.HomeFragment;
 import ir.tdaapp.mms.View.Fragments.MeetingsFragment;
@@ -40,7 +41,7 @@ public class CentralActivity extends AppCompatActivity implements S_Central, Nav
     private BottomNavigationView BottomBar;
     private FrameLayout FrameHome, FrameRequest, FrameApprovals, FrameMeetings;
     private DrawerLayout drawer;
-    private Animation aniFadeIn, aniFadeOut;
+    private Animation aniFadeIn, aniFadeOut, aniSlideDown, aniSlideUp;
     private Tbl_User tbl_user;
     private Tbl_Role tbl_role;
 
@@ -70,6 +71,8 @@ public class CentralActivity extends AppCompatActivity implements S_Central, Nav
     void Implements() {
         aniFadeIn = AnimationUtils.loadAnimation(this, R.anim.short_fadein);
         aniFadeOut = AnimationUtils.loadAnimation(this, R.anim.short_fadeout);
+        aniSlideUp=AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        aniSlideDown=AnimationUtils.loadAnimation(this, R.anim.slide_down);
         p_central = new P_Central(getSupportFragmentManager(), this);
         BottomBar.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
         tbl_user = new Tbl_User(getApplicationContext());
@@ -231,6 +234,12 @@ public class CentralActivity extends AppCompatActivity implements S_Central, Nav
                     if (!CloseDrawer())
                         BottomBar.setSelectedItemId(R.id.BottomBar_Home);
                 } else {
+
+                    //در اینجا اگر در صفحه افزودن درخواست باشد باتوم بار را نمایش می دهد
+                    if (fragmentInFrame instanceof AddRequestFragment) {
+                        ShowBottombar();
+                    }
+
                     getSupportFragmentManager().beginTransaction()
                             .remove(fragmentInFrame).commitNow();
                 }
@@ -318,16 +327,8 @@ public class CentralActivity extends AppCompatActivity implements S_Central, Nav
         return aniFadeIn;
     }
 
-    public void setAniFadeIn(Animation aniFadeIn) {
-        this.aniFadeIn = aniFadeIn;
-    }
-
     public Animation getAniFadeOut() {
         return aniFadeOut;
-    }
-
-    public void setAniFadeOut(Animation aniFadeOut) {
-        this.aniFadeOut = aniFadeOut;
     }
 
     //در اینجا دیالوگ مربوط به انتخاب نقش ها نمایش داده می شود
@@ -344,6 +345,20 @@ public class CentralActivity extends AppCompatActivity implements S_Central, Nav
         });
         thread.run();
 
+    }
+
+    public void ShowBottombar() {
+//        getBottomBar().clearAnimation();
+//        getBottomBar().animate().translationY(0).setDuration(200);
+        getBottomBar().setAnimation(aniSlideUp);
+        getBottomBar().setVisibility(View.VISIBLE);
+    }
+
+    public void HideBottombar() {
+//        getBottomBar().clearAnimation();
+//        getBottomBar().animate().translationY(100).setDuration(200);
+        getBottomBar().setAnimation(aniSlideDown);
+        getBottomBar().setVisibility(View.GONE);
     }
 }
 

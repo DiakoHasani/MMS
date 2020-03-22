@@ -14,115 +14,121 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolBar"
-        android:orientation="vertical">
+        android:layout_below="@id/toolBar">
 
-        <Spinner
-            android:id="@+id/cmb_WorkYear"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:spinnerMode="dialog"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:textDirection="ltr"
-            android:layoutDirection="ltr"
-            android:layout_marginTop="8dp"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <Spinner
-            android:id="@+id/cmb_Council"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:spinnerMode="dialog"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:textDirection="ltr"
-            android:layoutDirection="ltr"
-            android:layout_marginTop="20dp"/>
-
-        <Spinner
-            android:id="@+id/cmb_Session"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:spinnerMode="dialog"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:textDirection="ltr"
-            android:layoutDirection="ltr"
-            android:layout_marginTop="20dp"/>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="5dp"
-            android:clipToPadding="false"
-            app:cardUseCompatPadding="false"
-            android:clickable="true"
-            android:background="@color/colorWhiteDark"
-            app:cardCornerRadius="5dp"
-            android:foreground="?attr/selectableItemBackground">
-
-            <LinearLayout
+            <Spinner
+                android:id="@+id/cmb_WorkYear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp">
+                android:layout_marginLeft="16dp"
+                android:spinnerMode="dialog"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:textDirection="ltr"
+                android:layoutDirection="ltr"
+                android:layout_marginTop="8dp"/>
+
+            <Spinner
+                android:id="@+id/cmb_Council"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:spinnerMode="dialog"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:textDirection="ltr"
+                android:layoutDirection="ltr"
+                android:layout_marginTop="20dp"/>
+
+            <Spinner
+                android:id="@+id/cmb_Session"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:spinnerMode="dialog"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:textDirection="ltr"
+                android:layoutDirection="ltr"
+                android:layout_marginTop="20dp"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="5dp"
+                android:clipToPadding="false"
+                app:cardUseCompatPadding="false"
+                android:clickable="true"
+                android:background="@color/colorWhiteDark"
+                app:cardCornerRadius="5dp"
+                android:foreground="?attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_attachment"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:fontFamily="@font/vazir"
+                        android:textSize="16dp"
+                        android:textColor="@color/colorTitle"
+                        android:maxLines="1"
+                        android:layout_marginRight="10dp"
+                        android:text="@string/Upload_File"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <EditText
+                android:id="@+id/txt_Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="5dp"
+                android:lines="3"
+                android:hint="@string/RequestText"
+                android:fontFamily="@font/vazir"
+                android:textSize="16dp"
+                android:textColor="@color/colorTitle"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_attachment"/>
+                    android:src="@drawable/ic_keyboard_voice"
+                    android:layout_centerHorizontal="true"
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackground"/>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:fontFamily="@font/vazir"
-                    android:textSize="16dp"
-                    android:textColor="@color/colorTitle"
-                    android:maxLines="1"
-                    android:layout_marginRight="10dp"
-                    android:text="@string/Upload_File"/>
+            </RelativeLayout>
 
-            </LinearLayout>
+        </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
-
-        <EditText
-            android:id="@+id/txt_Text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:lines="5"
-            android:text="@string/RequestText"
-            android:fontFamily="@font/vazir"
-            android:textSize="16dp"
-            android:textColor="@color/colorTitle"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_keyboard_voice"
-                android:layout_centerHorizontal="true"
-                android:clickable="true"
-                android:background="?attr/selectableItemBackground"/>
-
-        </RelativeLayout>
-
-    </LinearLayout>
+    </ScrollView>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_alignParentBottom="true"
         android:background="@color/colorBlue"
         android:theme="@style/AppTheme.MyRipple2"
@@ -130,12 +136,11 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16dp"
+            android:layout_height="match_parent"
+            android:textSize="14dp"
             android:textColor="@color/colorWhite"
             android:gravity="center"
             android:fontFamily="@font/vazir"
-            android:padding="8dp"
             android:text="@string/CreateRequest"/>
 
     </RelativeLayout>

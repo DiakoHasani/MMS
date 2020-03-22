@@ -8,12 +8,15 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import ir.tdaapp.mms.Model.Enums.BottomBarItem;
 import ir.tdaapp.mms.Model.Services.S_AddRequest;
 import ir.tdaapp.mms.Model.Utilitys.BaseFragment;
+import ir.tdaapp.mms.Model.ViewModels.VM_WorkYear;
 import ir.tdaapp.mms.Presenter.P_AddRequest;
 import ir.tdaapp.mms.R;
 import ir.tdaapp.mms.View.Activitys.CentralActivity;
@@ -61,5 +64,15 @@ public class AddRequestFragment extends BaseFragment implements S_AddRequest {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.clear();
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void OnStart() {
+
+    }
+
+    @Override
+    public void onGetWorkYears(List<VM_WorkYear> workYears) {
+
     }
 }

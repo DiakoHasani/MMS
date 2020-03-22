@@ -355,9 +355,9 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
     //در اینجا ست می شود که دکمه بررسی درخواست ها در تولبار نمایش داده شود یا خیر
     @Override
     public void onShowManegmentRequests(boolean show) {
-        if (show){
+        if (show) {
             menu_manegment_requests.setVisible(true);
-        }else{
+        } else {
             menu_manegment_requests.setVisible(false);
         }
     }
@@ -373,8 +373,12 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_AddRequest:
+
+                ((CentralActivity) getActivity()).HideBottombar();
+
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .add(R.id.FrameRequest,new AddRequestFragment()).commit();
+                        .setCustomAnimations(R.anim.fadein, R.anim.fadeout, R.anim.fadein, R.anim.fadeout)
+                        .add(R.id.FrameRequest, new AddRequestFragment()).commit();
                 break;
             case R.id.btn_Error_Again:
             case R.id.btn_NoInternet_Retry:
