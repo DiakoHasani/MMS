@@ -14,10 +14,20 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary" />
 
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:theme="@style/ProgressBarTheme"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:visibility="invisible"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolBar">
+        android:layout_below="@id/toolBar"
+        android:layout_above="@+id/btn_AddRequest">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,7 +43,8 @@
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:textDirection="ltr"
                 android:layoutDirection="ltr"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="8dp"
+                android:visibility="gone"/>
 
             <Spinner
                 android:id="@+id/cmb_Council"
@@ -44,7 +55,8 @@
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:textDirection="ltr"
                 android:layoutDirection="ltr"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="8dp"
+                android:visibility="gone"/>
 
             <Spinner
                 android:id="@+id/cmb_Session"
@@ -55,9 +67,11 @@
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:textDirection="ltr"
                 android:layoutDirection="ltr"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="8dp"
+                android:visibility="gone"/>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/file"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
@@ -68,7 +82,8 @@
                 android:clickable="true"
                 android:background="@color/colorWhiteDark"
                 app:cardCornerRadius="5dp"
-                android:foreground="?attr/selectableItemBackground">
+                android:foreground="?attr/selectableItemBackground"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -106,19 +121,24 @@
                 android:hint="@string/RequestText"
                 android:fontFamily="@font/vazir"
                 android:textSize="16dp"
-                android:textColor="@color/colorTitle"/>
+                android:textColor="@color/colorTitle"
+                android:visibility="gone"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="5dp">
 
                 <ImageView
+                    android:id="@+id/voice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_keyboard_voice"
                     android:layout_centerHorizontal="true"
                     android:clickable="true"
-                    android:background="?attr/selectableItemBackground"/>
+                    android:background="?attr/selectableItemBackground"
+                    android:visibility="gone"/>
 
             </RelativeLayout>
 
@@ -126,7 +146,14 @@
 
     </ScrollView>
 
+    <include layout="@layout/error_slow_internet"/>
+
+    <include layout="@layout/error_internet_layout"/>
+
+    <include layout="@layout/error_application_layout"/>
+
     <RelativeLayout
+        android:id="@+id/btn_AddRequest"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"

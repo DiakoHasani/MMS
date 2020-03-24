@@ -29,7 +29,7 @@ public class Api_Home extends BaseApi {
 
                 try {
 
-                    new GetJsonObjectVolley(ApiUrl + "Home?RoleId=" + RoleId + "&UserId=" + UserId, resault -> {
+                    new GetJsonObjectVolley(ApiUrl + "Home/GetHome?RoleId=" + RoleId + "&UserId=" + UserId, resault -> {
 
                         if (resault.getResault() == ResaultCode.Success) {
 

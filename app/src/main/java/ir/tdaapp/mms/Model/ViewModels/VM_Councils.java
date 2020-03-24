@@ -7,6 +7,14 @@ public class VM_Councils {
     private int Id;
     private String Title;
 
+    public VM_Councils() {
+    }
+
+    public VM_Councils(int id, String title) {
+        Id = id;
+        Title = title;
+    }
+
     public int getId() {
         return Id;
     }

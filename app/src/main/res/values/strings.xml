@@ -22,5 +22,7 @@
     <string name="AddRequest">افزودن درخواست</string>
     <string name="CreateRequest">ایجاد درخواست</string>
     <string name="RequestText">متن درخواست</string>
+    <string name="WorkYear">سال کاری</string>
+    <string name="Council">شوراها</string>
 
 </resources>

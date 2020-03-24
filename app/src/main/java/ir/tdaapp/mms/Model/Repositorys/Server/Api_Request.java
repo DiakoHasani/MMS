@@ -1,5 +1,7 @@
 package ir.tdaapp.mms.Model.Repositorys.Server;
 
+import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +22,8 @@ import ir.tdaapp.mms.Model.ViewModels.VM_FilterRequest;
 import ir.tdaapp.mms.Model.ViewModels.VM_Meetings;
 import ir.tdaapp.mms.Model.ViewModels.VM_Requests;
 import ir.tdaapp.mms.Model.ViewModels.VM_RequestsDataSpinners;
+import ir.tdaapp.mms.Model.ViewModels.VM_WorkYear;
+import ir.tdaapp.mms.R;
 
 public class Api_Request extends BaseApi {
 
@@ -32,7 +36,7 @@ public class Api_Request extends BaseApi {
 
                 try {
 
-                    new GetJsonArrayVolley(ApiUrl + "Request?UserId=" + filter.getUserId() + "&CouncilsessionId=" + filter.getMeetingId(), resault -> {
+                    new GetJsonArrayVolley(ApiUrl + "Request/GetMyRequest?UserId=" + filter.getUserId() + "&CouncilsessionId=" + filter.getMeetingId(), resault -> {
 
                         if (resault.getResault() == ResaultCode.Success) {
 
@@ -44,8 +48,8 @@ public class Api_Request extends BaseApi {
                                 for (int i = 0; i < array.length(); i++) {
                                     try {
 
-                                        JSONObject object=array.getJSONObject(i);
-                                        VM_Requests request=new VM_Requests();
+                                        JSONObject object = array.getJSONObject(i);
+                                        VM_Requests request = new VM_Requests();
 
                                         request.setId(object.getInt("Id"));
                                         request.setTitle(object.getString("Title"));
@@ -67,7 +71,7 @@ public class Api_Request extends BaseApi {
 
                                 emitter.onSuccess(requests);
 
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 emitter.onError(e);
                             }
 
@@ -94,7 +98,7 @@ public class Api_Request extends BaseApi {
 
             try {
 
-                new GetJsonObjectVolley(ApiUrl + "Request?RoleId=" + roleId + "&UserId=" + userId + "&councilId=" + councilId, resault -> {
+                new GetJsonObjectVolley(ApiUrl + "Request/GetCouncilAndCouncilsession?RoleId=" + roleId + "&UserId=" + userId + "&councilId=" + councilId, resault -> {
 
                     if (resault.getResault() == ResaultCode.Success) {
 
@@ -177,6 +181,162 @@ public class Api_Request extends BaseApi {
 
         });
 
+    }
+
+    //دراینجا لیست سال کاری برگشت داده می شود
+    public Single<List<VM_WorkYear>> getWorkYears(Context context, int userId) {
+
+        return Single.create(emitter -> {
+
+            try {
+
+                new GetJsonObjectVolley(ApiUrl + "Request/GetAddRequest?councilSessionId=0&userId=" + userId, resault -> {
+
+                    if (resault.getResault() == ResaultCode.Success) {
+
+                        List<VM_WorkYear> workYears = new ArrayList<>();
+
+                        try {
+
+                            JSONArray array = resault.getObject().getJSONArray("WorkYears");
+
+                            VM_WorkYear v = new VM_WorkYear();
+                            v.setId(0);
+                            v.setTitle(context.getResources().getString(R.string.WorkYear));
+                            workYears.add(v);
+
+                            for (int i = 0; i < array.length(); i++) {
+
+                                try {
+                                    JSONObject object = array.getJSONObject(i);
+                                    VM_WorkYear workYear = new VM_WorkYear();
+                                    workYear.setId(object.getInt("Id"));
+                                    workYear.setTitle(object.getString("Title"));
+
+                                    workYears.add(workYear);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+                            emitter.onSuccess(workYears);
+
+                        } catch (Exception e) {
+                            emitter.onError(new IOException(resault.getResault().toString()));
+                        }
+                    } else {
+                        emitter.onError(new IOException(resault.getResault().toString()));
+                    }
+
+                });
+
+            } catch (Exception e) {
+                emitter.onError(e);
+            }
+
+        });
+
+    }
+
+    //در اینجا آی دی سال کاری می گیرد و لیست شوراهای آن را پاس می دهد
+    public Single<List<VM_Councils>> getCoucils(Context context, int userId, int workYearId) {
+
+        return Single.create(emitter -> {
+
+            try {
+
+                new GetJsonObjectVolley(ApiUrl + "Request/GetCouncilsAndSessionsForAddRequests?councilId=null&workYearId=" + workYearId + "&userId=" + userId, resault -> {
+
+                    if (resault.getResault() == ResaultCode.Success) {
+
+                        try {
+
+                            List<VM_Councils> councils = new ArrayList<>();
+                            JSONArray array = resault.getObject().getJSONArray("Councils");
+
+                            councils.add(new VM_Councils(0, context.getResources().getString(R.string.Council)));
+
+                            for (int i = 0; i < array.length(); i++) {
+
+                                try {
+
+                                    JSONObject object = array.getJSONObject(i);
+                                    VM_Councils council = new VM_Councils();
+                                    council.setId(object.getInt("Id"));
+                                    council.setTitle(object.getString("Titel"));
+
+                                    councils.add(council);
+
+                                } catch (Exception e) {
+                                }
+
+                            }
+
+                            emitter.onSuccess(councils);
+
+                        } catch (Exception e) {
+                            emitter.onError(e);
+                        }
+
+                    } else {
+                        emitter.onError(new IOException(resault.getResault().toString()));
+                    }
+
+                });
+
+            } catch (Exception e) {
+                emitter.onError(e);
+            }
+
+        });
+
+    }
+
+    //در اینجا آی دی سالف کاری و شورا را می گیرد و جلسات آن را برگشت می دهد
+    public Single<List<VM_Meetings>> getConcilSessions(Context context, int userId, int workYearId, int councilId) {
+
+        return Single.create(emitter -> {
+
+            try {
+
+                new GetJsonObjectVolley(ApiUrl + "Request/GetCouncilsAndSessionsForAddRequests?councilId=" + councilId + "&workYearId=" + workYearId + "&userId=" + userId, resault -> {
+
+                    try {
+
+                        JSONArray array = resault.getObject().getJSONArray("CouncilSessions");
+                        List<VM_Meetings> meetings = new ArrayList<>();
+                        meetings.add(new VM_Meetings(0, context.getResources().getString(R.string.Meetings)));
+
+                        for (int i = 0; i < array.length(); i++) {
+
+                            try{
+
+                                JSONObject object=array.getJSONObject(i);
+                                VM_Meetings meeting=new VM_Meetings();
+                                meeting.setId(object.getInt("Id"));
+                                meeting.setTitle(object.getString("Title"));
+
+                                meetings.add(meeting);
+
+                            }catch (Exception e){}
+
+                        }
+
+                        emitter.onSuccess(meetings);
+
+                    } catch (Exception e) {
+                        emitter.onError(e);
+                    }
+
+                });
+
+            } catch (Exception e) {
+                emitter.onError(e);
+            }
+
+        });
     }
 
 }
