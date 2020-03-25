@@ -1,5 +1,7 @@
 package ir.tdaapp.mms.Model.Repositorys.Server;
 
+import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +18,8 @@ import ir.tdaapp.mms.Model.ViewModels.VM_Role;
 
 public class Api_Role extends BaseApi {
 
+    GetJsonArrayVolley volley_GetUsersRole;
+
     //در اینجا نقش های کاربر را از سرور می گیرد
     public Single<List<VM_Role>> GetUsersRole(int Id) {
 
@@ -23,7 +27,7 @@ public class Api_Role extends BaseApi {
 
             try {
 
-                new GetJsonArrayVolley(ApiUrl + "User?UserId=" + Id, resault -> {
+                volley_GetUsersRole = new GetJsonArrayVolley(ApiUrl + "User/GetRolesUser?UserId=" + Id, resault -> {
 
                     if (resault.getResault() == ResaultCode.Success) {
 
@@ -61,6 +65,13 @@ public class Api_Role extends BaseApi {
 
         });
 
+    }
+
+    //در اینجا زمانی که صفحه بسته شود عملیات مربوط به کار با دیتابیس لغو می شود
+    public void CancelAll(String TAG, Context context) {
+        if (volley_GetUsersRole != null) {
+            volley_GetUsersRole.Cancel(TAG, context);
+        }
     }
 
 }

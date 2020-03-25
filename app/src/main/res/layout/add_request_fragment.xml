@@ -43,7 +43,6 @@
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:textDirection="ltr"
                 android:layoutDirection="ltr"
-                android:layout_marginTop="8dp"
                 android:visibility="gone"/>
 
             <Spinner

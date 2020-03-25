@@ -394,6 +394,6 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
     @Override
     public void onDestroy() {
         super.onDestroy();
-        p_request.GetDisposables().dispose();
+        p_request.GetDisposables(TAG).dispose();
     }
 }

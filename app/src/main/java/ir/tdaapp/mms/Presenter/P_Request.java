@@ -37,7 +37,7 @@ public class P_Request {
     }
 
     //در اینجا عملیات اولیه انجام می شود
-    public void Start(VM_FilterRequest filter,boolean getCouncils) {
+    public void Start(VM_FilterRequest filter, boolean getCouncils) {
 
         if (((CentralActivity) context).getTbl_role().HasRole()) {
 
@@ -45,7 +45,7 @@ public class P_Request {
             s_request.HideAll();
             s_request.Loading(true);
 
-            getInitialValue(filter.getCouncilId(),getCouncils);
+            getInitialValue(filter.getCouncilId(), getCouncils);
 
         } else {
             Toast.makeText(context, context.getResources().getString(R.string.PleaseSelectOneRole), Toast.LENGTH_SHORT).show();
@@ -75,7 +75,7 @@ public class P_Request {
     }
 
     //در اینجا مقادیر اسپینرها گرفته میشود
-    void getInitialValue(int councilId,boolean getCouncils) {
+    void getInitialValue(int councilId, boolean getCouncils) {
 
         int userId = ((CentralActivity) context).getTbl_user().GetUserId();
         int roleId = ((CentralActivity) context).getTbl_role().GetRoleId();
@@ -88,7 +88,7 @@ public class P_Request {
                 s_request.Loading(false);
                 s_request.HideAll();
 
-                if (getCouncils){
+                if (getCouncils) {
                     SetCouncil(vm_requestsDataSpinners.getCouncils());
                 }
 
@@ -163,7 +163,7 @@ public class P_Request {
     }
 
     //در اینجا لیست دیسپوزیبل ها را پاس می دهد تا درصورت بسته شده صفحه عملیات ما هم لغو شوند
-    public CompositeDisposable GetDisposables() {
+    public CompositeDisposable GetDisposables(String TAG) {
         CompositeDisposable composite = new CompositeDisposable();
 
         if (dispose_GetVals != null) {
@@ -177,6 +177,9 @@ public class P_Request {
         if (dispose_getInitialValue != null) {
             composite.add(dispose_getInitialValue);
         }
+
+        api_request.Cancel(TAG, context);
+
         return composite;
     }
 }

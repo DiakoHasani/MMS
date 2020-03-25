@@ -119,7 +119,7 @@ public class P_RoleDialog extends BaseApi {
     }
 
     //در اینجا لیست دیسپوزیبل ها را پاس می دهد تا درصورت بسته شده صفحه عملیات ما هم لغو شوند
-    public CompositeDisposable GetDisposables() {
+    public CompositeDisposable GetDisposables(String TAG) {
         CompositeDisposable composite = new CompositeDisposable();
 
         if (dispose_GetRoles != null) {
@@ -129,6 +129,8 @@ public class P_RoleDialog extends BaseApi {
         if (dispose_SetRoles != null) {
             composite.add(dispose_SetRoles);
         }
+
+        api_role.CancelAll(TAG, context);
 
         return composite;
     }

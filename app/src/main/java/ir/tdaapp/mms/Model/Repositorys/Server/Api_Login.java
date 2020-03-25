@@ -1,5 +1,7 @@
 package ir.tdaapp.mms.Model.Repositorys.Server;
 
+import android.content.Context;
+
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -12,6 +14,8 @@ import ir.tdaapp.mms.Model.ViewModels.VM_Login;
 import ir.tdaapp.mms.Model.ViewModels.VM_Message;
 
 public class Api_Login extends BaseApi {
+
+    PostJsonObjectVolley volley_data;
 
     //در اینجا مشخصات کاربر را برای لاگین سرور فرستاده نتیجا آن را دریافت می کند
     public Single<VM_Message> data(VM_Login login) {
@@ -29,27 +33,27 @@ public class Api_Login extends BaseApi {
                     object.put("ReturnUrl", "");
 
                     //در اینجا داده ها را به سمت سرور ارسال می کند
-                    new PostJsonObjectVolley(ApiUrl+"Account", object, resault -> {
+                    volley_data = new PostJsonObjectVolley(ApiUrl + "Account", object, resault -> {
 
                         //اگر بدون هیچ مشکلی مانند قطعی اینترنت یا مشکل سرور یا غیره باشد شرط زیر اجرا می شود
-                        if (resault.getResault()== ResaultCode.Success){
+                        if (resault.getResault() == ResaultCode.Success) {
 
-                            try{
+                            try {
 
                                 //در اینجا نتیجه عملیات در ویو مدل ست می شود
-                                VM_Message message=new VM_Message();
+                                VM_Message message = new VM_Message();
                                 message.setResault(resault.getObject().getBoolean("Resault"));
                                 message.setMessageText(resault.getObject().getString("MessageText"));
                                 message.setCode(resault.getObject().getInt("Code"));
 
                                 emitter.onSuccess(message);
 
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 emitter.onError(e);
                             }
                         }
                         //در غیر اینصورت شرط زیر اجرا می شود
-                        else{
+                        else {
                             emitter.onError(new IOException(resault.getResault().toString()));
                         }
                     });
@@ -61,5 +65,11 @@ public class Api_Login extends BaseApi {
             thread.run();
 
         });
+    }
+
+    public void Cancel(String TAG, Context context) {
+        if (volley_data != null) {
+            volley_data.Cancel(TAG, context);
+        }
     }
 }

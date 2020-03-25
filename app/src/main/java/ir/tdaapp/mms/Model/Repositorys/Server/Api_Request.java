@@ -27,6 +27,9 @@ import ir.tdaapp.mms.R;
 
 public class Api_Request extends BaseApi {
 
+    GetJsonArrayVolley volley_GetRequests;
+    GetJsonObjectVolley volley_getSpinnerData, volley_getWorkYears, volley_getCoucils, volley_getConcilSessions;
+
     //در اینجا لیست درخواست ها گرفته می شود
     public Single<List<VM_Requests>> GetRequests(VM_FilterRequest filter) {
 
@@ -311,16 +314,17 @@ public class Api_Request extends BaseApi {
 
                         for (int i = 0; i < array.length(); i++) {
 
-                            try{
+                            try {
 
-                                JSONObject object=array.getJSONObject(i);
-                                VM_Meetings meeting=new VM_Meetings();
+                                JSONObject object = array.getJSONObject(i);
+                                VM_Meetings meeting = new VM_Meetings();
                                 meeting.setId(object.getInt("Id"));
                                 meeting.setTitle(object.getString("Title"));
 
                                 meetings.add(meeting);
 
-                            }catch (Exception e){}
+                            } catch (Exception e) {
+                            }
 
                         }
 
@@ -337,6 +341,30 @@ public class Api_Request extends BaseApi {
             }
 
         });
+    }
+
+    public void Cancel(String TAG, Context context) {
+
+        if (volley_GetRequests != null) {
+            volley_GetRequests.Cancel(TAG, context);
+        }
+
+        if (volley_getSpinnerData != null) {
+            volley_getSpinnerData.Cancel(TAG, context);
+        }
+
+        if (volley_getWorkYears != null) {
+            volley_getWorkYears.Cancel(TAG, context);
+        }
+
+        if (volley_getCoucils != null) {
+            volley_getCoucils.Cancel(TAG, context);
+        }
+
+        if (volley_getConcilSessions != null) {
+            volley_getConcilSessions.Cancel(TAG, context);
+        }
+
     }
 
 }

@@ -21,6 +21,8 @@
     <string name="Upload_File">فایل ضمیمه (اختیاری)</string>
     <string name="SelectedOneYearOfWork">یک سال کاری انتخاب کنید</string>
     <string name="SelectedOneCouncil">یک شورا انتخاب کنید</string>
+    <string name="speech_not_supported">موبایل شما قادر به پشتیبانی این بخش نمی باشد</string>
+    <string name="speech_prompt">درخواست خود را بگویید</string>
 
     <string name="Please_be_Careful_in_Entering_Information">لطفا در وارد کردن اطلاعات دقت کنید</string>
     <string name="YourLoginWas_Successful_But_There_Was_a_problemRegistering_Your_Role">

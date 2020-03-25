@@ -20,6 +20,8 @@ import ir.tdaapp.mms.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, S_Login {
 
+    public final static String TAG = "LoginActivity";
+
     ShimmerFrameLayout Loading;
     P_Login p_login;
     TextInputEditText txt_UserName, txt_Password;
@@ -170,5 +172,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Loading.stopShimmerAnimation();
             btn_Login.setEnabled(true);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        p_login.GetDisposables(TAG).dispose();
     }
 }

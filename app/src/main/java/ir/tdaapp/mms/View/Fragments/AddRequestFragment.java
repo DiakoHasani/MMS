@@ -1,7 +1,10 @@
 package ir.tdaapp.mms.View.Fragments;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,9 +18,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -28,6 +33,7 @@ import ir.tdaapp.li_volley.Enum.ResaultCode;
 import ir.tdaapp.mms.Model.Enums.BottomBarItem;
 import ir.tdaapp.mms.Model.Services.S_AddRequest;
 import ir.tdaapp.mms.Model.Utilitys.BaseFragment;
+import ir.tdaapp.mms.Model.Utilitys.ETC;
 import ir.tdaapp.mms.Model.ViewModels.VM_Councils;
 import ir.tdaapp.mms.Model.ViewModels.VM_Meetings;
 import ir.tdaapp.mms.Model.ViewModels.VM_WorkYear;
@@ -35,7 +41,11 @@ import ir.tdaapp.mms.Presenter.P_AddRequest;
 import ir.tdaapp.mms.R;
 import ir.tdaapp.mms.View.Activitys.CentralActivity;
 
+import static android.app.Activity.RESULT_OK;
+
 public class AddRequestFragment extends BaseFragment implements S_AddRequest, View.OnClickListener {
+
+    public final static String TAG = "AddRequestFragment";
 
     Toolbar toolBar;
     P_AddRequest p_addRequest;
@@ -103,6 +113,7 @@ public class AddRequestFragment extends BaseFragment implements S_AddRequest, Vi
         btn_SlowInternet_Retry.setOnClickListener(this);
         btn_NoInternet_Retry.setOnClickListener(this);
         btn_Error_Again.setOnClickListener(this);
+        voice.setOnClickListener(this);
 
         //زمانی که کاربر یک از آیتم های اسپینر سال کاری را انتخاب کند براساس آی دی آن شوراهای آن برگشت داده می شود
         cmb_WorkYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -258,19 +269,42 @@ public class AddRequestFragment extends BaseFragment implements S_AddRequest, Vi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        p_addRequest.GetDisposables().dispose();
+        p_addRequest.GetDisposables(TAG).dispose();
     }
 
     @Override
     public void onClick(View view) {
 
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.btn_SlowInternet_Retry:
             case R.id.btn_NoInternet_Retry:
             case R.id.btn_Error_Again:
                 p_addRequest.start();
                 break;
+            case R.id.voice:
+
+                try {
+                    startActivityForResult(p_addRequest.promptSpeechInput(), 1);
+                } catch (ActivityNotFoundException a) {
+                    Toast.makeText(getContext(),
+                            getContext().getResources().getString(R.string.speech_not_supported),
+                            Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == 1) {
+
+            ArrayList<String> result = data
+                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+            txt_Text.setText(ETC.ReplaceSpechToText(result.get(0)));
+        }
     }
 }

@@ -1,11 +1,12 @@
 package ir.tdaapp.mms.Presenter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.EditText;
 
 import java.util.List;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import ir.tdaapp.li_utility.Codes.Validation;
 import ir.tdaapp.mms.Model.Repositorys.DataBase.Tbl_Role;
@@ -26,6 +27,8 @@ public class P_Login {
     Tbl_User tbl_user;
     Tbl_Role tbl_role;
 
+    Disposable dispose_StartLogin, dispose_GetRoles;
+
     public P_Login(Context context, S_Login s_login) {
         this.s_login = s_login;
         api_login = new Api_Login();
@@ -36,11 +39,10 @@ public class P_Login {
     }
 
     //اینجا زمانی که کاربر دکمه لاگین را فشار دهد فراخوانی می شود
-    @SuppressLint("CheckResult")
     public void StartLogin(VM_Login vm_login) {
         s_login.Loading(true);
 
-        api_login.data(vm_login).subscribeWith(new DisposableSingleObserver<VM_Message>() {
+        dispose_StartLogin = api_login.data(vm_login).subscribeWith(new DisposableSingleObserver<VM_Message>() {
             @Override
             public void onSuccess(VM_Message message) {
 
@@ -103,9 +105,8 @@ public class P_Login {
     }
 
     //اینجا زمانی که کاربر یک نقش داشته باشد فراخوانی می شود و نقش آن ذخیر می شود
-    @SuppressLint("CheckResult")
     public void GetRoles(int UserId) {
-        api_user.GetRolesUser(UserId).subscribeWith(new DisposableSingleObserver<List<Integer>>() {
+        dispose_GetRoles = api_user.GetRolesUser(UserId).subscribeWith(new DisposableSingleObserver<List<Integer>>() {
             @Override
             public void onSuccess(List<Integer> integers) {
 
@@ -136,6 +137,24 @@ public class P_Login {
         //در اینجا لودینگ غیر فعال می شود
         s_login.Loading(false);
         s_login.OnSuccessGetRole();
+    }
+
+    //در اینجا لیست دیسپوزیبل ها را پاس می دهد تا درصورت بسته شده صفحه عملیات ما هم لغو شوند
+    public CompositeDisposable GetDisposables(String TAG) {
+        CompositeDisposable composite = new CompositeDisposable();
+
+        if (dispose_StartLogin != null) {
+            composite.add(dispose_StartLogin);
+        }
+
+        if (dispose_GetRoles != null) {
+            composite.add(dispose_GetRoles);
+        }
+
+        api_login.Cancel(TAG, context);
+        api_user.Cancel(TAG, context);
+
+        return composite;
     }
 
 }

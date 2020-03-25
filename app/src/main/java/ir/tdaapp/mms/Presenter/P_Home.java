@@ -140,7 +140,7 @@ public class P_Home {
     }
 
     //در اینجا لیست دیسپوزیبل ها را پاس می دهد تا درصورت بسته شده صفحه عملیات ما هم لغو شوند
-    public CompositeDisposable GetDisposables() {
+    public CompositeDisposable GetDisposables(String TAG) {
         CompositeDisposable composite = new CompositeDisposable();
 
         if (disposGetHomeValues != null) {
@@ -158,6 +158,9 @@ public class P_Home {
         if (disposSetApprovals != null) {
             composite.add(disposSetApprovals);
         }
+
+        api_home.Cancel(TAG, context);
+
         return composite;
     }
 }

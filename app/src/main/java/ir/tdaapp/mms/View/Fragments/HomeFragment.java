@@ -53,8 +53,8 @@ public class HomeFragment extends BaseFragment implements S_Home, View.OnClickLi
     RecyclerView Recycler_Meeting, Recycler_Request, Recycler_Approval;
     LinearLayoutManager layoutManager_Meeting, layoutManager_Request, layoutManager_Approval;
 
-    RelativeLayout btn_GetAll_Meeting,btn_GetAll_Request,btn_GetAll_Approval;
-    TextView btn_NoInternet_Retry, btn_Error_Again,btn_SlowInternet_Retry;
+    RelativeLayout btn_GetAll_Meeting, btn_GetAll_Request, btn_GetAll_Approval;
+    TextView btn_NoInternet_Retry, btn_Error_Again, btn_SlowInternet_Retry;
     Toolbar toolBar;
     private ActionBarDrawerToggle toggle;
 
@@ -126,7 +126,7 @@ public class HomeFragment extends BaseFragment implements S_Home, View.OnClickLi
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.home_menu,menu);
+        inflater.inflate(R.menu.home_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -136,9 +136,9 @@ public class HomeFragment extends BaseFragment implements S_Home, View.OnClickLi
         if (toggle.onOptionsItemSelected(item))
             return true;
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.toolBar_Home_ChangeRoll:
-                ((CentralActivity)getActivity()).ShowRoleDialog();
+                ((CentralActivity) getActivity()).ShowRoleDialog();
                 break;
         }
 
@@ -236,7 +236,7 @@ public class HomeFragment extends BaseFragment implements S_Home, View.OnClickLi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        p_home.GetDisposables().dispose();
+        p_home.GetDisposables(TAG).dispose();
     }
 
     @Override
@@ -264,17 +264,17 @@ public class HomeFragment extends BaseFragment implements S_Home, View.OnClickLi
     }
 
     //در اینجا اگر یکی از رسایکلرهای ما خالی باشد دکمه نمایش همه مربوط به آن مخفی می شود
-    void HideBtnShowAlls(){
+    void HideBtnShowAlls() {
 
-        if (meetingAdapter.getItemCount()==0){
+        if (meetingAdapter.getItemCount() == 0) {
             btn_GetAll_Meeting.setVisibility(View.GONE);
         }
 
-        if (approvalAdapter.getItemCount()==0){
+        if (approvalAdapter.getItemCount() == 0) {
             btn_GetAll_Approval.setVisibility(View.GONE);
         }
 
-        if (requestAdapter.getItemCount()==0){
+        if (requestAdapter.getItemCount() == 0) {
             btn_GetAll_Request.setVisibility(View.GONE);
         }
 

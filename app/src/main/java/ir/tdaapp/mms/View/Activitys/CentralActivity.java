@@ -1,6 +1,7 @@
 package ir.tdaapp.mms.View.Activitys;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -9,6 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import io.reactivex.plugins.RxJavaPlugins;
 import ir.tdaapp.mms.Model.Enums.BottomBarItem;
 import ir.tdaapp.mms.Model.Repositorys.DataBase.Tbl_Role;
 import ir.tdaapp.mms.Model.Repositorys.DataBase.Tbl_User;
@@ -22,13 +24,16 @@ import ir.tdaapp.mms.View.Fragments.HomeFragment;
 import ir.tdaapp.mms.View.Fragments.MeetingsFragment;
 import ir.tdaapp.mms.View.Fragments.RequestFragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -348,15 +353,11 @@ public class CentralActivity extends AppCompatActivity implements S_Central, Nav
     }
 
     public void ShowBottombar() {
-//        getBottomBar().clearAnimation();
-//        getBottomBar().animate().translationY(0).setDuration(200);
         getBottomBar().setAnimation(aniSlideUp);
         getBottomBar().setVisibility(View.VISIBLE);
     }
 
     public void HideBottombar() {
-//        getBottomBar().clearAnimation();
-//        getBottomBar().animate().translationY(100).setDuration(200);
         getBottomBar().setAnimation(aniSlideDown);
         getBottomBar().setVisibility(View.GONE);
     }

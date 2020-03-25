@@ -1,5 +1,7 @@
 package ir.tdaapp.mms.Model.Repositorys.Server;
 
+import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,15 +23,18 @@ import ir.tdaapp.mms.Model.ViewModels.VM_Requests;
 
 public class Api_Home extends BaseApi {
 
+    GetJsonObjectVolley volley_GetVals;
+
     //دراینجا اطلاعات مربوط به صفحه اصلی می باشد
     public Single<VM_Home> GetVals(int UserId, int RoleId) {
+
         return Single.create(emitter -> {
 
             Thread thread = new Thread(() -> {
 
                 try {
 
-                    new GetJsonObjectVolley(ApiUrl + "Home/GetHome?RoleId=" + RoleId + "&UserId=" + UserId, resault -> {
+                    volley_GetVals = new GetJsonObjectVolley(ApiUrl + "Home/GetHome?RoleId=" + RoleId + "&UserId=" + UserId, resault -> {
 
                         if (resault.getResault() == ResaultCode.Success) {
 
@@ -120,8 +125,8 @@ public class Api_Home extends BaseApi {
 
                                     try {
 
-                                        JSONObject object=array_Approval.getJSONObject(i);
-                                        VM_Approvals approval=new VM_Approvals();
+                                        JSONObject object = array_Approval.getJSONObject(i);
+                                        VM_Approvals approval = new VM_Approvals();
 
                                         approval.setId(object.getInt("Id"));
                                         approval.setTitle(object.getString("Title"));
@@ -157,6 +162,12 @@ public class Api_Home extends BaseApi {
 
             thread.run();
         });
+    }
+
+    public void Cancel(String TAG, Context context) {
+        if (volley_GetVals != null) {
+            volley_GetVals.Cancel(TAG, context);
+        }
     }
 
 }

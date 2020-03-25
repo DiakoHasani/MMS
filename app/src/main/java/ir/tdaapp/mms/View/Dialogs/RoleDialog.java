@@ -296,6 +296,6 @@ public class RoleDialog extends BaseDialogFragment implements View.OnClickListen
     @Override
     public void onDestroy() {
         super.onDestroy();
-        p_roleDialog.GetDisposables().dispose();
+        p_roleDialog.GetDisposables(TAG).dispose();
     }
 }

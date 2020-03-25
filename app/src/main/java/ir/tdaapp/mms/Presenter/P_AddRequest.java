@@ -1,6 +1,8 @@
 package ir.tdaapp.mms.Presenter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.speech.RecognizerIntent;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
@@ -87,7 +89,7 @@ public class P_AddRequest {
     }
 
     //در اینجا داده پیش فرض اسپینر جلسات ست می شود
-    public void setDefaultValueSpinnerCouncilSession(){
+    public void setDefaultValueSpinnerCouncilSession() {
 
         List<VM_Meetings> meetings = new ArrayList<>();
         meetings.add(new VM_Meetings(0, context.getResources().getString(R.string.SelectedOneCouncil)));
@@ -145,7 +147,7 @@ public class P_AddRequest {
             public void onSuccess(List<VM_Meetings> vm_meetings) {
 
                 s_addRequest.onLoading(false);
-                ArrayAdapter<VM_Meetings> adapter=new ArrayAdapter<>(context,R.layout.spinner_item,vm_meetings);
+                ArrayAdapter<VM_Meetings> adapter = new ArrayAdapter<>(context, R.layout.spinner_item, vm_meetings);
                 s_addRequest.onGetCouncilSessionsId(adapter);
                 s_addRequest.onFinish();
             }
@@ -159,8 +161,21 @@ public class P_AddRequest {
 
     }
 
+    //مربوط به تبدیل گفتار به نوشتار
+    public Intent promptSpeechInput() {
+
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "fa");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                context.getResources().getString(R.string.speech_prompt));
+
+        return intent;
+    }
+
     //در اینجا لیست دیسپوزیبل ها را پاس می دهد تا درصورت بسته شده صفحه عملیات ما هم لغو شوند
-    public CompositeDisposable GetDisposables() {
+    public CompositeDisposable GetDisposables(String TAG) {
         CompositeDisposable composite = new CompositeDisposable();
 
         if (dispose_getWorkYears != null) {
@@ -170,6 +185,8 @@ public class P_AddRequest {
         if (dispose_getCouncils != null) {
             composite.add(dispose_getCouncils);
         }
+
+        api_request.Cancel(TAG, context);
 
         return composite;
     }
