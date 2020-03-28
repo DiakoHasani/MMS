@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,7 @@ import ir.tdaapp.mms.Model.Utilitys.BaseFragment;
 import ir.tdaapp.mms.Model.Utilitys.ETC;
 import ir.tdaapp.mms.Model.ViewModels.VM_Councils;
 import ir.tdaapp.mms.Model.ViewModels.VM_Meetings;
+import ir.tdaapp.mms.Model.ViewModels.VM_PostRequest;
 import ir.tdaapp.mms.Model.ViewModels.VM_WorkYear;
 import ir.tdaapp.mms.Presenter.P_AddRequest;
 import ir.tdaapp.mms.R;
@@ -52,11 +54,11 @@ public class AddRequestFragment extends BaseFragment implements S_AddRequest, Vi
     Spinner cmb_WorkYear, cmb_Council, cmb_Session;
     CardView file;
     EditText txt_Text;
-    ProgressBar loading;
-    ImageView voice;
+    ImageView voice, img_bigEditText;
     LinearLayout Slow_Internet, No_Internet, error;
     ShimmerFrameLayout shimmer_slow_internet, shimmer_internet, shimmer_error;
-    TextView btn_SlowInternet_Retry, btn_NoInternet_Retry, btn_Error_Again;
+    TextView btn_SlowInternet_Retry, btn_NoInternet_Retry, btn_Error_Again, lbl_TitleFile;
+    RelativeLayout layout_Text, btn_AddRequest, loading;
 
     @Nullable
     @Override
@@ -90,6 +92,10 @@ public class AddRequestFragment extends BaseFragment implements S_AddRequest, Vi
         error = view.findViewById(R.id.error);
         shimmer_error = view.findViewById(R.id.shimmer_error);
         btn_Error_Again = view.findViewById(R.id.btn_Error_Again);
+        lbl_TitleFile = view.findViewById(R.id.lbl_TitleFile);
+        layout_Text = view.findViewById(R.id.layout_Text);
+        img_bigEditText = view.findViewById(R.id.img_bigEditText);
+        btn_AddRequest = view.findViewById(R.id.btn_AddRequest);
     }
 
     void setToolbar() {
@@ -114,6 +120,9 @@ public class AddRequestFragment extends BaseFragment implements S_AddRequest, Vi
         btn_NoInternet_Retry.setOnClickListener(this);
         btn_Error_Again.setOnClickListener(this);
         voice.setOnClickListener(this);
+        file.setOnClickListener(this);
+        img_bigEditText.setOnClickListener(this);
+        btn_AddRequest.setOnClickListener(this);
 
         //زمانی که کاربر یک از آیتم های اسپینر سال کاری را انتخاب کند براساس آی دی آن شوراهای آن برگشت داده می شود
         cmb_WorkYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -156,6 +165,13 @@ public class AddRequestFragment extends BaseFragment implements S_AddRequest, Vi
         });
     }
 
+    //در اینجا صفحه ادیت تکست بزرگ که مربوط به متن درخواست است نمایش داده می شود
+    void showBigEditText() {
+        OnlyEditTextFragment e = new OnlyEditTextFragment(txt_Text.getText().toString());
+        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.FrameRequest, e).commit();
+        e.setS_Text_OnlyEditTextFragment(text -> txt_Text.setText(text));
+    }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.clear();
@@ -180,12 +196,12 @@ public class AddRequestFragment extends BaseFragment implements S_AddRequest, Vi
         cmb_Session.setVisibility(View.GONE);
         cmb_WorkYear.setVisibility(View.GONE);
         file.setVisibility(View.GONE);
-        txt_Text.setVisibility(View.GONE);
+        layout_Text.setVisibility(View.GONE);
         voice.setVisibility(View.GONE);
         Slow_Internet.setVisibility(View.GONE);
         No_Internet.setVisibility(View.GONE);
         error.setVisibility(View.GONE);
-        loading.setVisibility(View.INVISIBLE);
+        loading.setVisibility(View.GONE);
     }
 
     //در اینجا لودینگ نمایش یا مخفی می شود
@@ -194,7 +210,7 @@ public class AddRequestFragment extends BaseFragment implements S_AddRequest, Vi
         if (show) {
             loading.setVisibility(View.VISIBLE);
         } else {
-            loading.setVisibility(View.INVISIBLE);
+            loading.setVisibility(View.GONE);
         }
     }
 
@@ -229,7 +245,7 @@ public class AddRequestFragment extends BaseFragment implements S_AddRequest, Vi
         cmb_Session.setVisibility(View.VISIBLE);
         cmb_WorkYear.setVisibility(View.VISIBLE);
         file.setVisibility(View.VISIBLE);
-        txt_Text.setVisibility(View.VISIBLE);
+        layout_Text.setVisibility(View.VISIBLE);
         voice.setVisibility(View.VISIBLE);
     }
 
@@ -258,6 +274,93 @@ public class AddRequestFragment extends BaseFragment implements S_AddRequest, Vi
         cmb_Session.setAdapter(adapter);
     }
 
+    //زمانی که کاربر یک فایل انتخاب کند آدرس آن در اینجا گرفته می شود
+    @Override
+    public void onGetFilePath(String path) {
+
+        if (!path.equalsIgnoreCase("")){
+            lbl_TitleFile.setText(path);
+            lbl_TitleFile.setTextDirection(View.TEXT_DIRECTION_LTR);
+            lbl_TitleFile.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        }
+
+    }
+
+    //اگر تمام مقادیر ولید باشند متد زیر فراخوانی می شود تا فرآیند ارسال داده ها شروع شود
+    @Override
+    public void onValid() {
+        p_addRequest.addFileRequest(lbl_TitleFile.getText().toString());
+    }
+
+    //اگر مقادیر ولید نباشند متد زیر فراخوانی می شود
+    @Override
+    public void onNotValid() {
+        btn_AddRequest.setEnabled(true);
+        Toast.makeText(getContext(), getContext().getResources().getString(R.string.Please_be_careful_in_entering_values), Toast.LENGTH_SHORT).show();
+    }
+
+    ///زمانی که آپلود فایل با خطا مواجه شود متد زیر فراخوانی می شود
+    @Override
+    public void onErrorFile() {
+        btn_AddRequest.setEnabled(true);
+        Toast.makeText(getContext(), getResources().getString(R.string.Your_file_has_encountered_an_error), Toast.LENGTH_SHORT).show();
+    }
+
+    //زمانی که فایل با موفقیت آپلود شود این متد برای ادامه عملیات فراخوانی می شود
+    @Override
+    public void onSuccessPostFile(String fileName) {
+
+        VM_PostRequest request = new VM_PostRequest();
+
+        try {
+
+            int userId = ((CentralActivity) getActivity()).getTbl_user().GetUserId();
+            int roleId = ((CentralActivity) getActivity()).getTbl_role().GetRoleId();
+
+            request.setWorkYearId(((VM_WorkYear) cmb_WorkYear.getSelectedItem()).getId());
+            request.setCouncilId(((VM_Councils) cmb_Council.getSelectedItem()).getId());
+            request.setSessionId(((VM_Meetings) cmb_Session.getSelectedItem()).getId());
+            request.setAttachmentFile(fileName);
+            request.setRequestText(txt_Text.getText().toString());
+            request.setRoleId(roleId);
+            request.setUserId(userId);
+
+        } catch (Exception e) {
+        }
+
+        p_addRequest.addRequest(request);
+    }
+
+    //زمان افزودن درخواست اگر خطای رخ دهد متد زیر فراخوانی می شود
+    @Override
+    public void onErrorPostRequest(ResaultCode resault) {
+
+        btn_AddRequest.setEnabled(true);
+
+        switch (resault) {
+            case NetworkError:
+                Toast.makeText(getContext(), getContext().getResources().getString(R.string.Please_Check_Your_Internet), Toast.LENGTH_SHORT).show();
+                break;
+            case TimeoutError:
+                Toast.makeText(getContext(), getContext().getResources().getString(R.string.Your_Internet_Speed_Is_Very_Slow), Toast.LENGTH_SHORT).show();
+                break;
+            case ServerError:
+                Toast.makeText(getContext(), getContext().getResources().getString(R.string.An_Error_Has_Occurred_On_The_Server), Toast.LENGTH_SHORT).show();
+                break;
+            case ParseError:
+            case Error:
+                Toast.makeText(getContext(), getContext().getResources().getString(R.string.There_Was_an_Error_In_The_Application), Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    //زمانی که درخواست با موفقیت ثبت شود متد زیر فراخوانی می شود
+    @Override
+    public void onSuccessPostRequest(String message) {
+        btn_AddRequest.setEnabled(true);
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
     //زمانی که تمام داده ها از سرور گرفته شوند و کار ما به پایان برسد متد زیر فراخوانی می شود
     @Override
     public void onFinish() {
@@ -282,7 +385,6 @@ public class AddRequestFragment extends BaseFragment implements S_AddRequest, Vi
                 p_addRequest.start();
                 break;
             case R.id.voice:
-
                 try {
                     startActivityForResult(p_addRequest.promptSpeechInput(), 1);
                 } catch (ActivityNotFoundException a) {
@@ -290,6 +392,16 @@ public class AddRequestFragment extends BaseFragment implements S_AddRequest, Vi
                             getContext().getResources().getString(R.string.speech_not_supported),
                             Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.file:
+                p_addRequest.choseFile();
+                break;
+            case R.id.img_bigEditText:
+                showBigEditText();
+                break;
+            case R.id.btn_AddRequest:
+                btn_AddRequest.setEnabled(false);
+                p_addRequest.CheckValidation(cmb_WorkYear, cmb_Council, cmb_Session, txt_Text);
                 break;
         }
 

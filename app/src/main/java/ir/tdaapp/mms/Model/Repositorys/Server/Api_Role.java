@@ -27,37 +27,40 @@ public class Api_Role extends BaseApi {
 
             try {
 
-                volley_GetUsersRole = new GetJsonArrayVolley(ApiUrl + "User/GetRolesUser?UserId=" + Id, resault -> {
+                Thread thread=new Thread(()->{
+                    volley_GetUsersRole = new GetJsonArrayVolley(ApiUrl + "User/GetRolesUser?UserId=" + Id, resault -> {
 
-                    if (resault.getResault() == ResaultCode.Success) {
+                        if (resault.getResault() == ResaultCode.Success) {
 
-                        List<VM_Role> roles = new ArrayList<>();
-                        JSONArray vals = resault.getJsonArray();
+                            List<VM_Role> roles = new ArrayList<>();
+                            JSONArray vals = resault.getJsonArray();
 
-                        for (int i = 0; i < vals.length(); i++) {
+                            for (int i = 0; i < vals.length(); i++) {
 
-                            try {
+                                try {
 
-                                JSONObject object = vals.getJSONObject(i);
-                                VM_Role role = new VM_Role();
-                                role.setId(object.getInt("RoleId"));
-                                role.setTitle(object.getString("Title"));
+                                    JSONObject object = vals.getJSONObject(i);
+                                    VM_Role role = new VM_Role();
+                                    role.setId(object.getInt("RoleId"));
+                                    role.setTitle(object.getString("Title"));
 
-                                roles.add(role);
+                                    roles.add(role);
 
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
                             }
 
+                            emitter.onSuccess(roles);
+
+                        } else {
+                            emitter.onError(new IOException(resault.getResault().toString()));
                         }
 
-                        emitter.onSuccess(roles);
-
-                    } else {
-                        emitter.onError(new IOException(resault.getResault().toString()));
-                    }
-
+                    });
                 });
+                thread.start();
 
             } catch (Exception e) {
                 emitter.onError(e);

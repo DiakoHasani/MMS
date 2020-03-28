@@ -57,6 +57,11 @@ public class CentralActivity extends AppCompatActivity implements S_Central, Nav
 
         FindItem();
         Implements();
+
+        //زمانی که در آر ایکس جاوا خطای رخ دهد خط زیر فراخوانی می شود
+        //TODO در اینجا خطا های آر ایکس جاوا به سمت سرور ارسال شود
+        RxJavaPlugins.setErrorHandler(throwable -> {
+        });
     }
 
     //در اینجا کاربر در هر فرگمنتی باشد با فراخوانی این متد به باتوم بار دسترسی پیدا خواهد کرد

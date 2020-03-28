@@ -53,7 +53,7 @@ public class Api_User extends BaseApi {
                     emitter.onError(e);
                 }
             });
-            thread.run();
+            thread.start();
         });
     }
 

@@ -62,7 +62,7 @@ public class Api_Login extends BaseApi {
                     emitter.onError(e);
                 }
             });
-            thread.run();
+            thread.start();
 
         });
     }

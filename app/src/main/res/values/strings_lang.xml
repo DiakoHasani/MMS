@@ -8,6 +8,8 @@
     </string>
     <string name="Input_Your_Password">رمز عبور خود را وارد نمایید</string>
     <string name="Operation_error_occurred">خطای در عملیات رخ داده است</string>
+    <string name="This_value_must_be_filled">این مقدار باید پر شود</string>
+    <string name="Please_be_careful_in_entering_values">لطفا در وارد کردن مقادیر دقت کنید</string>
 
     <string name="Please_Check_Your_Internet">لطفا اینترنت خود را چک نمایید</string>
     <string name="Your_Internet_Speed_Is_Very_Slow">سرعت اینترنت شما بسیار کند است</string>
@@ -23,6 +25,8 @@
     <string name="SelectedOneCouncil">یک شورا انتخاب کنید</string>
     <string name="speech_not_supported">موبایل شما قادر به پشتیبانی این بخش نمی باشد</string>
     <string name="speech_prompt">درخواست خود را بگویید</string>
+    <string name="title_choose_file">فایل خود را انتخاب کنید</string>
+    <string name="Your_file_has_encountered_an_error">فایل شما با خطا مواجه شده است</string>
 
     <string name="Please_be_Careful_in_Entering_Information">لطفا در وارد کردن اطلاعات دقت کنید</string>
     <string name="YourLoginWas_Successful_But_There_Was_a_problemRegistering_Your_Role">

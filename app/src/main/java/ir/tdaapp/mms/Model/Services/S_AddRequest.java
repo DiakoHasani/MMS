@@ -29,5 +29,19 @@ public interface S_AddRequest {
 
     void onGetCouncilSessionsId(ArrayAdapter<VM_Meetings> adapter);
 
+    void onGetFilePath(String path);
+
+    void onValid();
+
+    void onNotValid();
+
+    void onErrorFile();
+
+    void onSuccessPostFile(String fileName);
+
+    void onErrorPostRequest(ResaultCode resault);
+
+    void onSuccessPostRequest(String message);
+
     void onFinish();
 }

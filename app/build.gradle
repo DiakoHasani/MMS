@@ -29,8 +29,8 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     //مربوط کتابخانه متریال می باشد
     implementation 'com.google.android.material:material:1.0.0'
@@ -51,9 +51,19 @@ dependencies {
     //مربوط به کتابخانه کار با سرور
     implementation project(path: ':li_volley')
 
+    //مربوط به کتابخانه کار با عکس
+    implementation project(path: ':li_image')
+
     //مربوط به رسایکلر ویو
     implementation 'androidx.recyclerview:recyclerview:1.1.0-beta01'
 
     //مربوط به کتابخانه گیف می باشد
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.+'
+
+    //مربوط به انتخاب کردن فایل
+    implementation 'com.obsez.android.lib.filechooser:filechooser:1.2.+'
+
+
+    //مربوط به گرفتن حق دسترسی از کاربر برای دست پیدا کردن به اطلاعات گوشی کاربر
+    implementation 'com.karumi:dexter:5.0.0'
 }

@@ -14,15 +14,6 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary" />
 
-    <ProgressBar
-        android:id="@+id/loading"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:theme="@style/ProgressBarTheme"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
-        android:visibility="invisible"/>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -96,6 +87,7 @@
                         android:src="@drawable/ic_attachment"/>
 
                     <TextView
+                        android:id="@+id/lbl_TitleFile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -110,18 +102,36 @@
 
             </androidx.cardview.widget.CardView>
 
-            <EditText
-                android:id="@+id/txt_Text"
+
+            <RelativeLayout
+                android:id="@+id/layout_Text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:layout_marginRight="5dp"
-                android:lines="3"
-                android:hint="@string/RequestText"
-                android:fontFamily="@font/vazir"
-                android:textSize="16dp"
-                android:textColor="@color/colorTitle"
-                android:visibility="gone"/>
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/txt_Text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lines="3"
+                    android:hint="@string/RequestText"
+                    android:fontFamily="@font/vazir"
+                    android:textSize="16dp"
+                    android:textColor="@color/colorTitle" />
+
+                <ImageView
+                    android:id="@+id/img_bigEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/ic_aspect_ratio"
+                    android:layout_margin="8dp"
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackground"/>
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -168,6 +178,23 @@
             android:gravity="center"
             android:fontFamily="@font/vazir"
             android:text="@string/CreateRequest"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBackgroundDialog"
+        android:visibility="gone"
+        android:clickable="true">
+
+        <ProgressBar
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:theme="@style/ProgressBarTheme2"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"/>
 
     </RelativeLayout>
 

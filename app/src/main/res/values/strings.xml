@@ -21,6 +21,7 @@
     <string name="ManegeRequests">مدیریت درخواست ها</string>
     <string name="AddRequest">افزودن درخواست</string>
     <string name="CreateRequest">ایجاد درخواست</string>
+    <string name="RecordChanges">ثبت تغییرات</string>
     <string name="RequestText">متن درخواست</string>
     <string name="WorkYear">سال کاری</string>
     <string name="Council">شوراها</string>

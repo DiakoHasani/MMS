@@ -1,9 +1,20 @@
 package ir.tdaapp.mms.Presenter;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
+
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
+import com.obsez.android.lib.filechooser.ChooserDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +23,14 @@ import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableSingleObserver;
+import ir.tdaapp.li_utility.Codes.Validation;
 import ir.tdaapp.mms.Model.Repositorys.Server.Api_Request;
 import ir.tdaapp.mms.Model.Services.S_AddRequest;
 import ir.tdaapp.mms.Model.Utilitys.Error;
 import ir.tdaapp.mms.Model.ViewModels.VM_Councils;
 import ir.tdaapp.mms.Model.ViewModels.VM_Meetings;
+import ir.tdaapp.mms.Model.ViewModels.VM_Message;
+import ir.tdaapp.mms.Model.ViewModels.VM_PostRequest;
 import ir.tdaapp.mms.Model.ViewModels.VM_WorkYear;
 import ir.tdaapp.mms.R;
 import ir.tdaapp.mms.View.Activitys.CentralActivity;
@@ -26,7 +40,8 @@ public class P_AddRequest {
     Context context;
     S_AddRequest s_addRequest;
     Api_Request api_request;
-    Disposable dispose_getWorkYears, dispose_getCouncils, dispose_getCouncilSessions;
+    Disposable dispose_getWorkYears, dispose_getCouncils, dispose_getCouncilSessions, dispose_addFileRequest;
+    Disposable dispose_addRequest;
 
     public P_AddRequest(Context context, S_AddRequest s_addRequest) {
         this.context = context;
@@ -174,6 +189,103 @@ public class P_AddRequest {
         return intent;
     }
 
+    public void choseFile() {
+
+        Dexter.withActivity(((CentralActivity) context)).withPermission(Manifest.permission.READ_EXTERNAL_STORAGE).withListener(
+                new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        new ChooserDialog((CentralActivity) context)
+                                .withFilter(false, false, "pdf", "doc", "docx", "jpg", "png")
+                                .withResources(R.string.title_choose_file, R.string.Select, R.string.Cancel)
+                                .withChosenListener((s, file) -> {
+                                    s_addRequest.onGetFilePath(s);
+                                })
+                                .build().show();
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+
+                    }
+                }
+        ).check();
+
+    }
+
+    public void CheckValidation(Spinner cmb_WorkYear, Spinner cmb_Council, Spinner cmb_Session, EditText txt_Text) {
+
+        boolean isValid = true;
+
+        if (((VM_WorkYear) cmb_WorkYear.getSelectedItem()).getId() == 0) {
+            isValid = false;
+        }
+
+        if (((VM_Councils) cmb_Council.getSelectedItem()).getId() == 0) {
+            isValid = false;
+        }
+
+        if (((VM_Meetings) cmb_Session.getSelectedItem()).getId() == 0) {
+            isValid = false;
+        }
+
+        if (!Validation.Required(txt_Text, context.getResources().getString(R.string.This_value_must_be_filled))) {
+            isValid = false;
+        }
+
+        if (isValid) {
+            s_addRequest.onValid();
+        } else {
+            s_addRequest.onNotValid();
+        }
+    }
+
+    //در اینجا فایل در سرور آپلود می شود و بعد از آن عملیات درج کردن داده ها در سرور شروع می شود
+    public void addFileRequest(String path) {
+
+        s_addRequest.onLoading(true);
+
+        Single<String> d = api_request.postFile(path);
+        dispose_addFileRequest = d.subscribeWith(new DisposableSingleObserver<String>() {
+            @Override
+            public void onSuccess(String s) {
+                s_addRequest.onSuccessPostFile(s.replace("\"", ""));
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                s_addRequest.onLoading(false);
+                s_addRequest.onErrorFile();
+            }
+        });
+
+    }
+
+    public void addRequest(VM_PostRequest request) {
+
+        Single<VM_Message> message = api_request.postRequest(request);
+
+        dispose_addRequest = message.subscribeWith(new DisposableSingleObserver<VM_Message>() {
+            @Override
+            public void onSuccess(VM_Message message) {
+                s_addRequest.onLoading(false);
+                s_addRequest.onSuccessPostRequest(message.getMessageText());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                s_addRequest.onLoading(false);
+                s_addRequest.onErrorPostRequest(Error.GetErrorVolley(e.toString()));
+            }
+        });
+
+    }
+
     //در اینجا لیست دیسپوزیبل ها را پاس می دهد تا درصورت بسته شده صفحه عملیات ما هم لغو شوند
     public CompositeDisposable GetDisposables(String TAG) {
         CompositeDisposable composite = new CompositeDisposable();
@@ -184,6 +296,14 @@ public class P_AddRequest {
 
         if (dispose_getCouncils != null) {
             composite.add(dispose_getCouncils);
+        }
+
+        if (dispose_addFileRequest != null) {
+            composite.add(dispose_addFileRequest);
+        }
+
+        if (dispose_addRequest != null) {
+            composite.add(dispose_addRequest);
         }
 
         api_request.Cancel(TAG, context);

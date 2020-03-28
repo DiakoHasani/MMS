@@ -160,7 +160,7 @@ public class Api_Home extends BaseApi {
 
             });
 
-            thread.run();
+            thread.start();
         });
     }
 
