@@ -11,15 +11,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import ir.tdaapp.mms.Model.Enums.BottomBarItem;
 import ir.tdaapp.mms.Model.Services.S_Text_OnlyEditTextFragment;
+import ir.tdaapp.mms.Model.Utilitys.BaseFragment;
 import ir.tdaapp.mms.Model.Utilitys.KeyBoard;
 import ir.tdaapp.mms.R;
 import ir.tdaapp.mms.View.Activitys.CentralActivity;
 
 //این صفحه برای زمانی است که کاربر روی بزرگنمایی ادیت تکست در صفحه افزودن درخواست کلیک کرد این صفحه باز می شود که دارای ادیت تکست بزرگتری است
-public class OnlyEditTextFragment extends Fragment implements View.OnClickListener {
+public class OnlyEditTextFragment extends BaseFragment implements View.OnClickListener {
 
     S_Text_OnlyEditTextFragment s_text_onlyEditTextFragment;
     TextView txt_Text;

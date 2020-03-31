@@ -133,9 +133,7 @@ public class ApprovalsFragment extends BaseFragment implements S_Approval, View.
     public void onLoading(boolean isLoading) {
         if (isLoading) {
             Loading.setVisibility(View.VISIBLE);
-            Loading.startShimmerAnimation();
         } else {
-            Loading.stopShimmerAnimation();
             Loading.setVisibility(View.GONE);
         }
     }

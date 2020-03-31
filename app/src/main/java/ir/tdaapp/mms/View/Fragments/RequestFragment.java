@@ -197,6 +197,11 @@ public class RequestFragment extends BaseFragment implements S_Request, View.OnC
             case R.id.toolBar_Request_ChangeRoll:
                 ((CentralActivity) getActivity()).ShowRoleDialog();
                 break;
+            case R.id.toolBar_Request_ManegeRequest:
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.fadein,R.anim.fadeout,R.anim.fadein,R.anim.fadeout)
+                        .add(R.id.FrameRequest,new ManegmentRequestFragment()).commit();
+                break;
         }
 
         return super.onOptionsItemSelected(item);

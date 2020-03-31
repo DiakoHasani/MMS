@@ -33,6 +33,7 @@ public class Api_Request extends BaseApi {
     GetJsonArrayVolley volley_GetRequests;
     GetJsonObjectVolley volley_getSpinnerData, volley_getWorkYears, volley_getCoucils, volley_getConcilSessions;
     PostJsonObjectVolley volley_postRequest;
+    GetJsonObjectVolley volley_getWorkYearsSecretary, volley_getCouncilsSecretary, volley_getCouncilSessionsSecretary;
     FileManger fileManger;
 
     //در اینجا لیست درخواست ها گرفته می شود
@@ -373,7 +374,7 @@ public class Api_Request extends BaseApi {
 
             try {
 
-                Thread thread=new Thread(() -> {
+                Thread thread = new Thread(() -> {
                     try {
 
                         String Url = ApiUrl + "PostFileRequest/PostFile";
@@ -417,13 +418,13 @@ public class Api_Request extends BaseApi {
                     volley_postRequest = new PostJsonObjectVolley(ApiUrl + "Request/PostAddRequest", object, resault -> {
                         if (resault.getResault() == ResaultCode.Success) {
 
-                            VM_Message message=new VM_Message();
+                            VM_Message message = new VM_Message();
 
-                            try{
+                            try {
                                 message.setCode(resault.getObject().getInt("Code"));
                                 message.setMessageText(resault.getObject().getString("MessageText"));
                                 message.setResault(resault.getObject().getBoolean("Resault"));
-                            }catch (Exception e){
+                            } catch (Exception e) {
 
                             }
 
@@ -442,6 +443,143 @@ public class Api_Request extends BaseApi {
 
         });
 
+    }
+
+    //در اینجا لیست سال های کاری را به دبیر پاس می دهد
+    public Single<List<VM_WorkYear>> getWorkYearsSecretary(int userId, Context context) {
+
+        return Single.create(emitter -> {
+
+            new Thread(() -> {
+                volley_getWorkYearsSecretary = new GetJsonObjectVolley(ApiUrl + "Request/GetCheckRequest?UserId=" + userId + "&CouncilSessionId=null", resault -> {
+
+                    try {
+
+                        if (resault.getResault() == ResaultCode.Success) {
+
+                            JSONArray array = resault.getObject().getJSONArray("WorkYears");
+                            List<VM_WorkYear> workYears = new ArrayList<>();
+
+                            workYears.add(new VM_WorkYear(0, context.getResources().getString(R.string.WorkYear)));
+
+                            for (int i = 0; i < array.length(); i++) {
+
+                                try {
+
+                                    JSONObject object = array.getJSONObject(i);
+                                    VM_WorkYear workYear = new VM_WorkYear();
+
+                                    workYear.setId(object.getInt("Id"));
+                                    workYear.setTitle(object.getString("Title"));
+
+                                    workYears.add(workYear);
+
+                                } catch (Exception e) {
+                                }
+                            }
+
+                            emitter.onSuccess(workYears);
+
+                        } else {
+                            emitter.onError(new IOException(resault.getResault().toString()));
+                        }
+
+                    } catch (Exception e) {
+                        emitter.onError(e);
+                    }
+
+                });
+            }).start();
+
+        });
+
+    }
+
+    //در اینجا لیست شوراها برای دبیر ارسال می شود
+    public Single<List<VM_Councils>> getCouncilsSecretary(Context context, int userId, int workYearId) {
+
+        return Single.create(emitter -> {
+
+            new Thread(() -> {
+                volley_getCouncilsSecretary = new GetJsonObjectVolley(ApiUrl + "Request/GetCouncilsAndSesssionsForCheckRequests?UserId=" + userId + "&councilId=null&workYearId=" + workYearId, resault -> {
+
+                    if (resault.getResault() == ResaultCode.Success) {
+
+                        try {
+
+                            JSONArray array = resault.getObject().getJSONArray("Councils");
+                            List<VM_Councils> councils = new ArrayList<>();
+
+                            councils.add(new VM_Councils(0, context.getResources().getString(R.string.Council)));
+
+                            for (int i = 0; i < array.length(); i++) {
+
+                                try {
+
+                                    JSONObject object = array.getJSONObject(i);
+                                    councils.add(new VM_Councils(object.getInt("Id"), object.getString("Titel")));
+
+                                } catch (Exception e) {
+                                }
+                            }
+
+                            emitter.onSuccess(councils);
+
+                        } catch (Exception e) {
+                            emitter.onError(e);
+                        }
+
+                    } else {
+                        emitter.onError(new IOException(resault.getResault().toString()));
+                    }
+
+                });
+            }).start();
+
+        });
+
+    }
+
+    //در اینجا لیست جلسات برگشت داده می شود
+    public Single<List<VM_Meetings>> getCouncilSessionsSecretary(Context context, int userId, int workYearId, int councilId) {
+        return Single.create(emitter -> {
+
+            new Thread(() -> {
+                volley_getCouncilSessionsSecretary = new GetJsonObjectVolley(ApiUrl + "Request/GetCouncilsAndSesssionsForCheckRequests?UserId=" + userId + "&councilId=" + councilId + "&workYearId=" + workYearId, resault -> {
+
+                    if (resault.getResault() == ResaultCode.Success) {
+
+                        try {
+
+                            List<VM_Meetings> meetings = new ArrayList<>();
+                            JSONArray array = resault.getObject().getJSONArray("CouncilSessions");
+                            meetings.add(new VM_Meetings(0, context.getResources().getString(R.string.Meetings)));
+
+                            for (int i = 0; i < array.length(); i++) {
+
+                                try {
+
+                                    JSONObject object=array.getJSONObject(i);
+                                    meetings.add(new VM_Meetings(object.getInt("Id"),object.getString("Title")));
+
+                                }catch (Exception e){}
+
+                            }
+
+                            emitter.onSuccess(meetings);
+
+                        } catch (Exception e) {
+                            emitter.onError(e);
+                        }
+
+                    } else {
+                        emitter.onError(new IOException(resault.getResault().toString()));
+                    }
+
+                });
+            }).start();
+
+        });
     }
 
     public void Cancel(String TAG, Context context) {
@@ -470,6 +608,17 @@ public class Api_Request extends BaseApi {
             volley_postRequest.Cancel(TAG, context);
         }
 
+        if (volley_getWorkYearsSecretary != null) {
+            volley_getWorkYearsSecretary.Cancel(TAG, context);
+        }
+
+        if (volley_getCouncilsSecretary != null) {
+            volley_getCouncilsSecretary.Cancel(TAG, context);
+        }
+
+        if (volley_getCouncilSessionsSecretary != null) {
+            volley_getCouncilSessionsSecretary.Cancel(TAG, context);
+        }
     }
 
 }

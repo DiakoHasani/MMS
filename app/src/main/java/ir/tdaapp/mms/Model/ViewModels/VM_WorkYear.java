@@ -7,6 +7,14 @@ public class VM_WorkYear {
     private int Id;
     private String Title;
 
+    public VM_WorkYear() {
+    }
+
+    public VM_WorkYear(int id, String title) {
+        Id = id;
+        Title = title;
+    }
+
     public int getId() {
         return Id;
     }

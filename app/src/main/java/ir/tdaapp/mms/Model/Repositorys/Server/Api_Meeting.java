@@ -36,7 +36,7 @@ public class Api_Meeting extends BaseApi {
 
             });
 
-            thread.start();
+            thread.run();
 
         });
 
