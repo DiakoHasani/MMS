@@ -14,12 +14,14 @@ import io.reactivex.Single;
 import ir.tdaapp.li_volley.Enum.ResaultCode;
 import ir.tdaapp.li_volley.Volleys.GetJsonArrayVolley;
 import ir.tdaapp.li_volley.Volleys.GetJsonObjectVolley;
+import ir.tdaapp.li_volley.Volleys.PostJsonArrayVolley;
 import ir.tdaapp.li_volley.Volleys.PostJsonObjectVolley;
 import ir.tdaapp.mms.Model.Enums.Request_Condition;
 import ir.tdaapp.mms.Model.Utilitys.BaseApi;
 import ir.tdaapp.mms.Model.Utilitys.FileManger;
 import ir.tdaapp.mms.Model.ViewModels.VM_Councils;
 import ir.tdaapp.mms.Model.ViewModels.VM_FilterRequest;
+import ir.tdaapp.mms.Model.ViewModels.VM_FilterRequestsSecretary;
 import ir.tdaapp.mms.Model.ViewModels.VM_Meetings;
 import ir.tdaapp.mms.Model.ViewModels.VM_Message;
 import ir.tdaapp.mms.Model.ViewModels.VM_PostRequest;
@@ -33,6 +35,7 @@ public class Api_Request extends BaseApi {
     GetJsonArrayVolley volley_GetRequests;
     GetJsonObjectVolley volley_getSpinnerData, volley_getWorkYears, volley_getCoucils, volley_getConcilSessions;
     PostJsonObjectVolley volley_postRequest;
+    PostJsonArrayVolley volley_getRequestsSecretary;
     GetJsonObjectVolley volley_getWorkYearsSecretary, volley_getCouncilsSecretary, volley_getCouncilSessionsSecretary;
     FileManger fileManger;
 
@@ -559,10 +562,11 @@ public class Api_Request extends BaseApi {
 
                                 try {
 
-                                    JSONObject object=array.getJSONObject(i);
-                                    meetings.add(new VM_Meetings(object.getInt("Id"),object.getString("Title")));
+                                    JSONObject object = array.getJSONObject(i);
+                                    meetings.add(new VM_Meetings(object.getInt("Id"), object.getString("Title")));
 
-                                }catch (Exception e){}
+                                } catch (Exception e) {
+                                }
 
                             }
 
@@ -580,6 +584,80 @@ public class Api_Request extends BaseApi {
             }).start();
 
         });
+    }
+
+    //در اینجا لیست درخواست ها برای دبیر برگشت داده می شود
+    public Single<List<VM_Requests>> getRequestsSecretary(VM_FilterRequestsSecretary filter) {
+
+        return Single.create(emitter -> {
+
+            new Thread(() -> {
+
+
+                JSONArray array = new JSONArray();
+                try {
+                    JSONObject object = new JSONObject();
+                    object.put("UserId", filter.getUserId());
+                    object.put("CouncilSessionId", filter.getCouncilSessionId());
+                    object.put("CouncilId", filter.getCouncilId());
+                    object.put("WorkYearId", filter.getWorkYearId());
+                    object.put("LoadPreviousRequestThatAreHavingCheckingStatus", filter.isLoadPreviousRequestThatAreHavingCheckingStatus());
+                    array.put(object);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                volley_getRequestsSecretary = new PostJsonArrayVolley(ApiUrl + "Request/RequetsForCheckRequests", array, resault -> {
+
+                    if (resault.getResault() == ResaultCode.Success) {
+
+                        try {
+
+                            List<VM_Requests> requests = new ArrayList<>();
+                            JSONArray a = resault.getJsonArray();
+
+                            for (int i = 0; i < a.length(); i++) {
+
+                                try {
+
+                                    JSONObject object = a.getJSONObject(i);
+                                    VM_Requests request = new VM_Requests();
+
+                                    request.setId(object.getInt("Id"));
+                                    request.setTitle(object.getString("Title"));
+
+                                    if (object.getInt("Condition") == 0) {
+                                        request.setCondition(Request_Condition.Waiting);
+                                    } else if (object.getInt("Condition") == 1) {
+                                        request.setCondition(Request_Condition.Accepted);
+                                    } else {
+                                        request.setCondition(Request_Condition.Reject);
+                                    }
+
+                                    requests.add(request);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+                            emitter.onSuccess(requests);
+
+                        } catch (Exception e) {
+                            emitter.onError(e);
+                        }
+
+                    } else {
+                        emitter.onError(new IOException(resault.getResault().toString()));
+                    }
+
+                });
+
+            }).start();
+
+        });
+
     }
 
     public void Cancel(String TAG, Context context) {
@@ -618,6 +696,10 @@ public class Api_Request extends BaseApi {
 
         if (volley_getCouncilSessionsSecretary != null) {
             volley_getCouncilSessionsSecretary.Cancel(TAG, context);
+        }
+
+        if (volley_getRequestsSecretary != null) {
+            volley_getRequestsSecretary.Cancel(TAG, context);
         }
     }
 
